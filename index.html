@@ -14,50 +14,49 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* تنسيق يضمن اندماج النظام مع التصميم الأصلي */
-        #dynamic-section {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
+        /* إخفاء أي عناصر إضافية وضمان ظهور القصص كجزء من التصميم */
+        #stories-layer {
             position: relative;
             z-index: 10;
+            margin-top: -50px; /* لدمج القصص مع التصميم العلوي */
+            padding: 20px;
         }
-        .omar-card {
-            background: #ffffff;
-            border-radius: 16px;
+        .clean-story-card {
+            background: white;
+            border-radius: 15px;
             padding: 15px;
-            margin-top: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border: 1px solid #f0f0f0;
         }
-        .admin-panel {
-            background: #fff5f0;
-            border: 2px dashed #ff6b00;
-            border-radius: 16px;
+        /* المربع البرتقالي مخفي تماماً الآن */
+        #adminPanel {
+            display: none; 
+            background: #fff9f5;
+            border: 1px solid #ffccbc;
+            border-radius: 15px;
             padding: 15px;
             margin-bottom: 20px;
         }
+        /* سيظهر المربع فقط عند تسجيل دخولك أنت */
+        .show-admin { display: block !important; }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
-    <div id="dynamic-section">
-        
-        <div id="adminPanel" class="hidden admin-panel">
-            <h3 class="text-orange-700 font-bold text-center mb-3">⚙️ إضافة قصة جديدة</h3>
-            <input id="sTitle" type="text" placeholder="اسم القصة" class="w-full p-3 mb-2 rounded-xl border-none shadow-inner bg-white outline-none">
-            <input id="sPrice" type="number" placeholder="السعر" class="w-full p-3 mb-3 rounded-xl border-none shadow-inner bg-white outline-none">
-            <button onclick="addStory()" class="w-full bg-[#ff6b00] text-white py-3 rounded-xl font-bold shadow-lg hover:bg-orange-600 transition">نشر الآن</button>
+    <div id="stories-layer" class="max-w-md mx-auto">
+        <div id="adminPanel">
+            <h3 class="text-center font-bold text-orange-600 mb-2">إضافة قصة</h3>
+            <input id="sTitle" type="text" placeholder="العنوان" class="w-full p-2 mb-2 border rounded-lg outline-none">
+            <input id="sPrice" type="number" placeholder="السعر" class="w-full p-2 mb-2 border rounded-lg outline-none">
+            <button onclick="addStory()" class="w-full bg-orange-500 text-white py-2 rounded-lg font-bold">حفظ</button>
         </div>
 
-        <div id="storiesContainer">
-            </div>
+        <div id="storiesList"></div>
     </div>
 
     <script>
-        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyBn-8ER3jyhEx6Fm4bM6uG9-fIoikHrT_c",
             authDomain: "ana-omar-b0e6c.firebaseapp.com",
@@ -71,10 +70,9 @@
         const db = firebase.firestore();
         const adminEmail = "kemoloveone1234@gmail.com";
 
-        // مراقبة حالة المستخدم
         auth.onAuthStateChanged(user => {
             if (user && user.email === adminEmail) {
-                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('adminPanel').classList.add('show-admin');
             }
             loadStories();
         });
@@ -90,28 +88,28 @@
 
         function loadStories() {
             db.collection("stories").orderBy("time", "desc").onSnapshot(snap => {
-                const container = document.getElementById('storiesContainer');
-                container.innerHTML = '';
+                const list = document.getElementById('storiesList');
+                list.innerHTML = '';
                 snap.forEach(doc => {
                     const s = doc.data();
                     const isAdmin = auth.currentUser && auth.currentUser.email === adminEmail;
-                    container.innerHTML += `
-                        <div class="omar-card">
+                    list.innerHTML += `
+                        <div class="clean-story-card">
                             <div class="flex justify-between items-center">
                                 <div>
-                                    <h4 class="font-bold text-gray-800 text-lg">${s.title}</h4>
-                                    <span class="text-orange-600 font-bold">${s.price} جنيه</span>
+                                    <h4 class="font-bold text-gray-800">${s.title}</h4>
+                                    <span class="text-orange-600 font-bold text-sm">${s.price} ج.م</span>
                                 </div>
-                                <a href="https://wa.me/201063858006?text=أريد شراء: ${s.title}" class="bg-green-500 text-white px-5 py-2 rounded-full font-bold shadow-sm">شراء</a>
+                                <a href="https://wa.me/201063858006?text=أريد: ${s.title}" class="bg-green-500 text-white px-4 py-1 rounded-full text-xs font-bold">طلب</a>
                             </div>
-                            ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="text-red-400 text-xs mt-3 underline">حذف القصة</button>` : ''}
+                            ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="text-red-300 text-[10px] mt-2">حذف</button>` : ''}
                         </div>`;
                 });
             });
         }
 
         function deleteStory(id) {
-            if(confirm("هل تريد حذف هذه القصة؟")) db.collection("stories").doc(id).delete();
+            if(confirm("حذف؟")) db.collection("stories").doc(id).delete();
         }
     </script>
 </body>
