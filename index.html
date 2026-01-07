@@ -3,116 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق عالم عمر الاحترافي</title>
+    <title>عالم عمر للقصص</title>
     <style>
-        :root { --main: #e74c3c; --dark: #2c3e50; --light: #ecf0f1; }
-        body { margin: 0; background: var(--dark); color: white; font-family: sans-serif; text-align: center; }
+        body { font-family: 'Arial', sans-serif; background-color: #f0f9ff; margin: 0; padding: 0; text-align: center; }
+        header { background: #ff5722; color: white; padding: 20px; font-size: 24px; border-radius: 0 0 20px 20px; }
         
-        /* نظام الصفحات */
-        .page { display: none; padding: 20px; animation: fade 0.3s; }
+        /* الشاشات */
+        .screen { display: none; padding: 20px; }
         .active { display: block; }
-        @keyframes fade { from {opacity: 0;} to {opacity: 1;} }
 
-        /* الأزرار والكروت */
-        .btn { background: var(--main); color: white; padding: 15px 30px; border: none; border-radius: 10px; font-size: 18px; cursor: pointer; margin: 10px; width: 80%; }
-        .card { background: #34495e; padding: 15px; border-radius: 15px; margin: 15px auto; width: 90%; border-bottom: 4px solid var(--main); }
-        
-        /* شريط التنقل السفلي */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #1a252f; display: flex; justify-content: space-around; padding: 15px 0; }
-        .nav-item { color: #bdc3c7; cursor: pointer; font-size: 14px; text-decoration: none; }
-        .nav-item.active { color: var(--main); font-weight: bold; }
+        /* كروت الأقسام */
+        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 20px; }
+        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; border: 2px solid #ff5722; }
+        .card h3 { margin: 0; color: #ff5722; }
 
-        /* لوحة الرفع */
-        input[type="file"] { background: white; color: black; padding: 10px; border-radius: 5px; margin: 10px 0; width: 80%; }
-        .progress { width: 80%; background: #eee; height: 10px; border-radius: 5px; margin: 10px auto; display: none; }
-        .fill { background: #2ecc71; height: 100%; width: 0%; border-radius: 5px; transition: 0.2s; }
+        /* منطقة القراءة */
+        .reader-box { background: white; padding: 25px; border-radius: 20px; margin: 15px; text-align: right; line-height: 1.8; font-size: 20px; border: 3px solid #4caf50; }
+        .back-btn { background: #777; color: white; padding: 10px 20px; border: none; border-radius: 10px; margin-top: 20px; cursor: pointer; }
+
+        /* الإدارة */
+        .admin-box { background: #fff; padding: 20px; border-radius: 15px; margin: 20px; border: 2px dashed #ccc; }
+        .nav { position: fixed; bottom: 0; width: 100%; background: #fff; display: flex; justify-content: space-around; padding: 15px 0; border-top: 2px solid #eee; }
     </style>
 </head>
 <body>
 
-    <div id="home" class="page active">
-        <h1 style="color: var(--main);">عالم عمر 🚀</h1>
-        <p>اختر القسم المفضل لديك:</p>
-        <button class="btn" onclick="showCat('مغامرات')">🧭 قصص مغامرات</button>
-        <button class="btn" onclick="showCat('تعليمية')">🎓 قصص تعليمية</button>
-        <button class="btn" onclick="showCat('أخلاقية')">✨ قصص أخلاقية</button>
-        
-        <div class="card" style="margin-top:30px; border-color: #f1c40f;">
-            <p>فودافون كاش للاشتراك: <b>01063858006</b></p>
-        </div>
-    </div>
+    <header>عالم عمر 🚀</header>
 
-    <div id="category" class="page">
-        <h2 id="catTitle">القسم</h2>
-        <div id="storiesList">
+    <div id="home" class="screen active">
+        <h2>اختر قصة لتقرأها فوراً:</h2>
+        <div class="grid">
+            <div class="card" onclick="readStory('الأسد والأرنب', 'كان يا ما كان، في غابة بعيدة، كان هناك أسد قوي يفتخر بقوته، وفي يوم من الأيام جاء أرنب صغير ذكي قرر أن يعلم الأسد درساً في التواضع...')">
+                <h3>🦁 قصة الأسد والأرنب</h3>
+                <p>اضغط للقراءة</p>
             </div>
-        <button class="btn" style="background:#95a5a6;" onclick="go('home')">رجوع للأقسام</button>
+            <div class="card" onclick="readStory('السلحفاة السريعة', 'في سباق كبير بين الأرنب والسلحفاة، ظن الأرنب أنه سيفوز بسهولة ونام في الطريق، لكن السلحفاة استمرت في المشي ببطء وعزيمة حتى وصلت لخط النهاية وفازت!')">
+                <h3>🐢 قصة السلحفاة والأرنب</h3>
+                <p>اضغط للقراءة</p>
+            </div>
+        </div>
+        <div style="padding: 10px; background: #fff3cd; border-radius: 10px; margin: 20px;">
+            للاشتراك: 01063858006
+        </div>
     </div>
 
-    <div id="admin" class="page">
-        <h1>لوحة تحكم المدير ⚙️</h1>
-        <div class="card">
-            <h3>رفع قصة جديدة PDF</h3>
-            <input type="file" id="fileInput">
-            <div class="progress" id="prog"><div class="fill" id="fill"></div></div>
-            <button class="btn" style="background:#2ecc71;" onclick="upload()">بدء الرفع</button>
+    <div id="reader" class="screen">
+        <h2 id="storyTitle" style="color: #4caf50;"></h2>
+        <div class="reader-box" id="storyText"></div>
+        <button class="back-btn" onclick="show('home')">العودة للرئيسية</button>
+    </div>
+
+    <div id="admin" class="screen">
+        <div class="admin-box">
+            <h3>إضافة قصة جديدة (نص)</h3>
+            <textarea placeholder="اكتب القصة هنا..." style="width:90%; height:100px;"></textarea><br>
+            <button onclick="alert('تم الحفظ!')" style="background:#4caf50; color:white; padding:10px; border:none; border-radius:5px; margin-top:10px;">حفظ القصة</button>
         </div>
-        <p>كلمة السر الافتراضية: 123</p>
     </div>
 
     <div class="nav">
-        <div class="nav-item active" id="n-home" onclick="go('home')">🏠 الرئيسية</div>
-        <div class="nav-item" id="n-admin" onclick="checkAdmin()">⚙️ الإدارة</div>
+        <div onclick="show('home')" style="cursor:pointer">🏠 الرئيسية</div>
+        <div onclick="checkAdmin()" style="cursor:pointer">⚙️ الإدارة</div>
     </div>
 
     <script>
-        // دالة التنقل بين الصفحات
-        function go(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        function show(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            
-            // تحديث شكل الأزرار تحت
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(id === 'home') document.getElementById('n-home').classList.add('active');
-            if(id === 'admin') document.getElementById('n-admin').classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        // دالة عرض محتوى القسم
-        function showCat(name) {
-            document.getElementById('catTitle').innerText = "قسم " + name;
-            const list = document.getElementById('storiesList');
-            // هنا بنحط نموذج لقصة، وممكن نغيرها بعدين بملفاتك
-            list.innerHTML = `
-                <div class="card">
-                    <h3>قصة ${name} الأولى</h3>
-                    <p>هذه قصة تجريبية ممتعة</p>
-                    <button class="btn" onclick="alert('جاري فتح القصة...')">اقرأ الآن</button>
-                </div>
-            `;
-            go('category');
+        function readStory(title, text) {
+            document.getElementById('storyTitle').innerText = title;
+            document.getElementById('storyText').innerText = text;
+            show('reader');
         }
 
-        // دخول الإدارة بكلمة سر
         function checkAdmin() {
-            let p = prompt("أدخل كلمة السر:");
-            if(p === "123") {
-                go('admin');
-            } else {
-                alert("خطأ!");
-            }
-        }
-
-        // محاكاة عملية الرفع
-        function upload() {
-            if(!document.getElementById('fileInput').files[0]) return alert("اختر ملف!");
-            document.getElementById('prog').style.display = 'block';
-            let f = document.getElementById('fill');
-            let w = 0;
-            let i = setInterval(() => {
-                w += 10;
-                f.style.width = w + '%';
-                if(w >= 100) { clearInterval(i); alert("تم الرفع بنجاح يا عمر!"); }
-            }, 300);
+            if(prompt("كلمة السر:") === "123") show('admin');
         }
     </script>
 </body>
