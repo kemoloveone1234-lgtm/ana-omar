@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
     <title>تطبيق أنا عمر</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <script type="module" crossorigin src="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/assets/index-pDdOUBjD.js"></script>
+    <link rel="stylesheet" crossorigin href="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/assets/index-DFK4dfQq.css">
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-</head>
-<body class="bg-gray-100 font-sans">
-    <div class="max-w-md mx-auto bg-white min-h-screen shadow-xl flex flex-col">
-        
-        <header class="bg-blue-600 p-6 text-white text-center shadow-md">
-            <h1 class="text-2xl font-bold">📚 تطبيق أنا عمر</h1>
-            <p id="userName" class="text-xs mt-2 opacity-80"></p>
-        </header>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        <div id="adminPanel" class="hidden p-4 bg-yellow-50 border-b-2 border-yellow-200">
-            <h2 class="font-bold text-blue-800 mb-2 text-sm text-center">🛠 إضافة قصة جديدة</h2>
-            <input id="sTitle" type="text" placeholder="عنوان القصة" class="w-full p-3 mb-2 border rounded-lg text-sm">
-            <input id="sPrice" type="number" placeholder="السعر بالجنيه" class="w-full p-3 mb-2 border rounded-lg text-sm">
-            <button onclick="addStory()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold shadow">نشر القصة</button>
+    <style>
+        #adminPanel { z-index: 1000; position: relative; border-radius: 15px; margin-top: 20px; }
+        .story-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; border-right: 5px solid #2563eb; shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <div class="max-w-md mx-auto p-4">
+        <div id="adminPanel" class="hidden p-5 bg-yellow-50 border-2 border-yellow-400 shadow-lg">
+            <h2 class="font-bold text-blue-900 mb-4 text-center">⚙️ لوحة تحكم عمر (إضافة قصص)</h2>
+            <input id="sTitle" type="text" placeholder="اسم القصة الجديدة" class="w-full p-3 mb-3 border rounded-xl shadow-sm">
+            <input id="sPrice" type="number" placeholder="السعر بالجنيه" class="w-full p-3 mb-4 border rounded-xl shadow-sm">
+            <button onclick="addStory()" class="w-full bg-blue-700 text-white py-3 rounded-xl font-bold hover:bg-blue-800 transition shadow-md">نشر القصة الآن</button>
         </div>
 
-        <main class="p-4 flex-grow">
-            <div id="loginSection" class="text-center py-20">
-                <p class="mb-4 text-gray-600">أهلاً بك! سجل دخولك لمتابعة جديد القصص</p>
-                <button onclick="login()" class="bg-red-500 text-white px-10 py-4 rounded-full font-bold shadow-lg transition-transform active:scale-95">
-                    G تسجيل دخول بجوجل
-                </button>
-            </div>
-            <div id="storiesList" class="space-y-4"></div>
-        </main>
+        <div id="loginSection" class="text-center py-10 hidden">
+            <button onclick="login()" class="bg-red-500 text-white px-10 py-3 rounded-full font-bold shadow-xl">تسجيل الدخول للإدارة</button>
+        </div>
 
-        <footer class="p-4 border-t text-center text-xs text-gray-400 bg-gray-50">
-            كل الحقوق محفوظة لعمر © 2026
-        </footer>
+        <div id="storiesList" class="mt-8 space-y-4">
+            </div>
     </div>
 
     <script>
+        // إعدادات مشروعك في Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyBn-8ER3jyhEx6Fm4bM6uG9-fIoikHrT_c",
             authDomain: "ana-omar-b0e6c.firebaseapp.com",
@@ -48,11 +47,10 @@
             messagingSenderId: "781802661336",
             appId: "1:781802661336:web:25736ef0b6b27f15167ead"
         };
-
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const adminEmail = "kemoloveone1234@gmail.com";
+        const adminEmail = "kemoloveone1234@gmail.com"; // إيميلك للتحكم
 
         function login() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -62,37 +60,24 @@
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('userName').innerText = "مرحباً يا " + user.displayName;
                 if (user.email === adminEmail) {
                     document.getElementById('adminPanel').classList.remove('hidden');
                 }
                 loadStories();
             } else {
                 document.getElementById('loginSection').classList.remove('hidden');
-                document.getElementById('storiesList').innerHTML = "";
-                document.getElementById('adminPanel').classList.add('hidden');
             }
         });
 
         function addStory() {
             const title = document.getElementById('sTitle').value;
             const price = document.getElementById('sPrice').value;
-            if(!title || !price) return alert("يرجى إكمال البيانات");
-            
-            db.collection("stories").add({
-                title: title,
-                price: price,
-                time: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
+            if(!title || !price) return alert("من فضلك اكتب الاسم والسعر");
+            db.collection("stories").add({ title, price, time: new Date() })
+            .then(() => {
                 document.getElementById('sTitle').value = "";
                 document.getElementById('sPrice').value = "";
             });
-        }
-
-        function deleteStory(id) {
-            if(confirm("هل أنت متأكد من حذف هذه القصة؟")) {
-                db.collection("stories").doc(id).delete();
-            }
         }
 
         function loadStories() {
@@ -103,16 +88,22 @@
                     const s = doc.data();
                     const isAdmin = auth.currentUser && auth.currentUser.email === adminEmail;
                     list.innerHTML += `
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-100 relative">
-                            <h3 class="font-bold text-gray-800 text-lg">${s.title}</h3>
-                            <p class="text-blue-600 font-bold mt-1">${s.price} جنيه</p>
+                        <div class="story-card shadow-lg bg-white">
+                            <h3 class="font-bold text-xl text-gray-800">${s.title}</h3>
+                            <p class="text-blue-600 font-extrabold text-lg mt-1">${s.price} جنيه</p>
                             <div class="flex gap-2 mt-4">
-                                <a href="https://wa.me/201063858006?text=أريد شراء قصة: ${s.title}" class="flex-grow bg-green-500 text-white text-center py-2 rounded-lg text-sm font-bold shadow-sm">شراء الآن</a>
-                                ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="bg-red-50 text-red-500 px-4 py-2 rounded-lg text-xs border border-red-100 font-bold">حذف</button>` : ''}
+                                <a href="https://wa.me/201063858006?text=أريد شراء قصة: ${s.title}" class="flex-grow bg-green-500 hover:bg-green-600 text-white text-center py-2 rounded-lg font-bold shadow transition">طلب عبر واتساب</a>
+                                ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="bg-red-50 text-red-600 px-4 rounded-lg text-sm border border-red-100 font-bold">حذف</button>` : ''}
                             </div>
                         </div>`;
                 });
             });
+        }
+
+        function deleteStory(id) {
+            if(confirm("هل تريد مسح هذه القصة نهائياً؟")) {
+                db.collection("stories").doc(id).delete();
+            }
         }
     </script>
 </body>
