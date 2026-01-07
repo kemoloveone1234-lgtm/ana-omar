@@ -1,138 +1,120 @@
+
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالم عمر - التطبيق الحقيقي</title>
-    <style>
-        /* تنسيق كرتوني واحترافي */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f3; margin: 0; text-align: center; }
-        .page { display: none; padding: 20px; min-height: 100vh; }
-        .active { display: block; }
-        
-        /* شاشة الدخول */
-        #login { background: #4a90e2; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        input { padding: 15px; border-radius: 10px; border: none; width: 80%; margin: 20px 0; font-size: 18px; }
-        
-        /* الأقسام والزراير */
-        .header { background: #fff; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 24px; font-weight: bold; color: #4a90e2; }
-        .btn-cat { width: 45%; padding: 20px 10px; margin: 5px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; font-size: 16px; }
-        .bg-red { background: #ff5e57; } .bg-green { background: #1dd1a1; } .bg-blue { background: #54a0ff; } .bg-orange { background: #ff9f43; }
-        
-        /* الكروت */
-        .story-card { background: white; border-radius: 20px; padding: 15px; margin: 15px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .story-card img { width: 100%; border-radius: 15px; height: 150px; object-fit: cover; }
-        .read-btn { background: #4a90e2; color: white; border: none; padding: 10px 20px; border-radius: 10px; margin-top: 10px; width: 100%; font-weight: bold; }
-        
-        /* شريط سفلي */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; }
-        .nav-item { cursor: pointer; color: #777; font-weight: bold; }
-    </style>
-</head>
-<body>
+<html lang="en">
+  <head>
+<title>أنا عمر</title>
+<meta name="description" content=" أنا عمر                          (function () {                const redirect &#x3D; new URLSearchParams(location.search).get" />
+<meta name="keywords" content="" />
+<meta itemprop="image" content="" />
 
-    <div id="loginPage" class="page active">
-        <h1>مرحباً بك في عالم عمر 📖</h1>
-        <p>اكتب اسمك عشان نبدأ المغامرة</p>
-        <input type="text" id="userName" placeholder="اسمك هنا...">
-        <button class="btn-cat bg-green" style="width:80%" onclick="login()">دخول الآن</button>
-    </div>
+<!-- Open Graph 协议 -->
+<meta property="og:title" content="أنا عمر" />
+<meta property="og:description" content=" أنا عمر                          (function () {                const redirect &#x3D; new URLSearchParams(location.search).get" />
+<meta property="og:image" content="" />
+<meta property="og:url" content="app-8qx7q7jy06pt.appmedo.com/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="أنا عمر" />
+<meta property="og:locale" content="zh_CN" />
 
-    <div id="homePage" class="page">
-        <div class="header">عالم عمر 🌟</div>
-        <p>أهلاً يا <span id="nameLabel">بطل</span>، اختر قسمك:</p>
-        
-        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-            <button class="btn-cat bg-red" onclick="showSection('مغامرات')">🧭 مغامرات</button>
-            <button class="btn-cat bg-green" onclick="showSection('تعليمية')">🎓 تعليمية</button>
-            <button class="btn-cat bg-blue" onclick="showSection('أخلاقية')">✨ أخلاقية</button>
-            <button class="btn-cat bg-orange" onclick="showSection('تاريخية')">📜 تاريخية</button>
-        </div>
+<!-- Twitter Card 协议 -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="أنا عمر" />
+<meta name="twitter:description" content=" أنا عمر                          (function () {                const redirect &#x3D; new URLSearchParams(location.search).get" />
+<meta name="twitter:image" content="" />
+<meta name="twitter:url" content="app-8qx7q7jy06pt.appmedo.com/" />
+<meta name="twitter:site" content="@MiaodaAI" />
 
-        <div style="background:#fff3cd; padding:15px; border-radius:15px; margin:20px; border:1px dashed #856404;">
-            <strong>طريقة الدفع:</strong><br>
-            📱 كاش: 01063858006<br>
-            💸 انستاباي: kemolove
-        </div>
-    </div>
+<link
+  rel="icon"
+  href="https://resource-static.cdn.bcebos.com/img/favicon.png"
+/>
 
-    <div id="sectionPage" class="page">
-        <button onclick="showPage('homePage')" style="float: right; padding: 10px; border-radius: 10px; border: none; background: #ddd;">رجوع ↩️</button>
-        <h2 id="sectionTitle">قسم القصص</h2>
-        <div id="storiesList">
-            </div>
-    </div>
 
-    <div id="adminPage" class="page">
-        <h2>لوحة إدارة عمر ⚙️</h2>
-        <div class="story-card">
-            <p>رفع ملف PDF جديد</p>
-            <input type="file" id="pdfFile">
-            <button class="read-btn" onclick="fakeUpload()">بدء الرفع (إظهار شريط التحميل)</button>
-            <div id="progressCont" style="display:none; background:#eee; height:10px; border-radius:5px; margin-top:10px;">
-                <div id="progressBar" style="background:green; height:100%; width:0%; border-radius:5px;"></div>
-            </div>
-        </div>
-        <button onclick="showPage('homePage')" class="read-btn" style="background:#777">خروج</button>
-    </div>
-
-    <div id="navBar" class="nav-bar" style="display:none">
-        <div class="nav-item" onclick="showPage('homePage')">🏠 الرئيسية</div>
-        <div class="nav-item" onclick="openAdmin()">⚙️ الإدارة</div>
-    </div>
-
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" crossorigin src="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/assets/index-pDdOUBjD.js"></script>
+    <link rel="stylesheet" crossorigin href="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/assets/index-DFK4dfQq.css">
     <script>
-        // 1. نظام الدخول
-        function login() {
-            let name = document.getElementById('userName').value;
-            if (name) {
-                document.getElementById('nameLabel').innerText = name;
-                showPage('homePage');
-                document.getElementById('navBar').style.display = 'flex';
-            } else { alert("من فضلك اكتب اسمك"); }
-        }
+              (function () {
+                const redirect = new URLSearchParams(location.search).get('redirect');
+                if (redirect && redirect !== location.pathname) {
+                  history.replaceState(null, '', redirect);
+                }
+              })();
+            </script>
+    <link rel="stylesheet" id="fonts-code" href="https://miaoda-font.cdn.bcebos.com/static/font_v1/fonts-code.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script id="md-click">
+              window.mdClick = e => {
+                const target = e.target;
+                const {href, target: linkTarget} = target.dataset;
+                const appType = 'web';
+                const isBlank = linkTarget === '_blank';
 
-        // 2. نظام التنقل (شغال 100%)
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            window.scrollTo(0,0);
-        }
+                if (!href) return;
 
-        // 3. عرض القصص لكل قسم
-        function showSection(name) {
-            document.getElementById('sectionTitle').innerText = "قصص " + name;
-            let list = document.getElementById('storiesList');
-            // محاكاة إضافة قصص (عشان التطبيق ميبقاش فاضي)
-            list.innerHTML = `
-                <div class="story-card">
-                    <img src="https://picsum.photos/400/200?random=1">
-                    <h3>قصة ${name} الأولى</h3>
-                    <p>السعر: مجاني</p>
-                    <button class="read-btn" onclick="alert('جاري فتح القصة...')">اقرأ الآن (PDF)</button>
-                </div>
-            `;
-            showPage('sectionPage');
-        }
+                e.stopPropagation();
+                e.preventDefault();
 
-        // 4. الإدارة
-        function openAdmin() {
-            let p = prompt("كلمة السر:");
-            if (p === "123") { showPage('adminPage'); } 
-            else { alert("خطأ في كلمة السر"); }
-        }
+                // 外部链接或新窗口打开
+                if (isBlank || href.startsWith('http')) {
+                  let finalHref = href;
+                  if (appType === 'miniapp' && !href.startsWith('http')) {
+                    finalHref = window.location.href.split('#')[0] + '#/' + href;
+                  }
+                  window.open(finalHref, linkTarget || '_self');
+                  return;
+                }
 
-        // 5. شريط التحميل
-        function fakeUpload() {
-            let bar = document.getElementById('progressBar');
-            document.getElementById('progressCont').style.display = 'block';
-            let w = 0;
-            let inter = setInterval(() => {
-                w += 5;
-                bar.style.width = w + '%';
-                if (w >= 100) { clearInterval(inter); alert("تم الرفع بنجاح!"); }
-            }, 100);
+                // 内部路由跳转
+                const finalHref = href.startsWith('/') ? href : '/' + href;
+                if (appType === 'miniapp') {
+                  window.location.hash = finalHref;
+                  window.dispatchEvent(new HashChangeEvent('hashchange'));
+                } else {
+                  window.history.pushState({}, '', finalHref);
+                  window.dispatchEvent(new Event('popstate'));
+                }
+              };
+              document.addEventListener('click', window.mdClick, true);
+            </script>
+    <script id="iframe-onerror-catcher">
+              const observer = new PerformanceObserver((list) => {
+                list.getEntries().forEach((entry) => {
+                  if (entry.initiatorType === 'script' && entry.responseStatus >= 400) {
+                    window.parent.postMessage({
+                      type: "RESOURCE_LOAD_ERROR",
+                      name: entry.name,
+                      status: entry.responseStatus
+                    }, "*");
+                    console.warn('[iframe-error] Resource failed:', entry.name, entry.responseStatus);
+                  }
+                });
+              });
+              observer.observe({ type: 'resource', buffered: true });
+            </script>
+  <script>
+  (function () {
+    const script = document.createElement('script');
+    script.src = 'https://miaoda-resource-static.s3cdn.medo.dev/runtime-inject/domain-static/online/1.0.37.1/static/miaoda-external.js?tm=' + new Date().getTime();
+    script.async = true;
+    script.onload = function () {
+      window.miaoda.init({
+        appId: 'app-8qx7q7jy06pt',
+        type: 'WEB',
+        share: {
+            title: "أنا عمر",
+            desc: " أنا عمر                          (function () {                const redirect &#x3D; new URLSearchParams(location.search).get",
+            image: "https://miaoda-screenshot-img.s3cdn.medo.dev/preview_screen/app-8qx7q7jy06pt/app-8qx7q7jy06pt_1767713412565_5e93.png"
         }
-    </script>
+      });
+    };
+    document.head.appendChild(script);
+  })();
+</script>
+
 </body>
 </html>
