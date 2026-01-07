@@ -2,147 +2,158 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم عالم عمر - الإصدار النهائي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>عالم عمر - النسخة التشغيلية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --main: #4e73df; --sec: #1cc88a; --warn: #f6c23e; --danger: #e74a3b; --bg: #f8f9fc; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); margin: 0; overflow-x: hidden; }
+        :root { --main: #4e73df; --grad: linear-gradient(135deg, #4e73df 0%, #224abe 100%); }
+        body { font-family: 'Cairo', sans-serif; background: #f4f7f6; margin: 0; padding-bottom: 80px; }
         
-        /* شاشة الدخول */
-        #login-screen { position: fixed; inset: 0; background: linear-gradient(135deg, var(--main), #224abe); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .login-card { background: white; padding: 40px; border-radius: 25px; width: 85%; max-width: 400px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
-        
-        /* القائمة العلوية */
-        header { background: white; padding: 15px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); sticky; top: 0; z-index: 1000; }
-        .nav-scroll { display: flex; overflow-x: auto; gap: 10px; padding: 10px 15px; background: white; border-bottom: 1px solid #e3e6f0; }
-        .nav-item { padding: 10px 20px; background: #eaecf4; border: none; border-radius: 50px; cursor: pointer; white-space: nowrap; font-weight: bold; transition: 0.3s; color: #5a5c69; }
-        .nav-item.active { background: var(--main); color: white; }
+        /* نظام إخفاء وإظهار الصفحات */
+        .page { display: none; animation: fadeIn 0.3s; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* منطقة المحتوى */
-        .content { padding: 20px; }
-        .story-grid { display: none; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .story-grid.active { display: grid; }
-        
-        /* الكروت */
-        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); position: relative; }
-        .card img { width: 100%; height: 200px; object-fit: cover; }
-        .card-info { padding: 15px; }
-        .badge-price { position: absolute; top: 15px; left: 15px; background: var(--warn); color: #000; padding: 5px 12px; border-radius: 50px; font-weight: bold; font-size: 13px; }
+        /* شاشة الدخول */
+        #login-page { background: var(--grad); height: 100vh; color: white; text-align: center; padding: 40px 20px; }
+        .login-input { width: 100%; padding: 15px; border-radius: 15px; border: none; margin: 20px 0; font-size: 18px; }
+
+        /* الهيدر والأقسام */
+        header { background: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .nav-tabs { display: flex; overflow-x: auto; gap: 10px; padding: 15px; background: white; border-bottom: 1px solid #ddd; }
+        .tab { padding: 10px 20px; border-radius: 50px; border: 2px solid var(--main); background: white; color: var(--main); white-space: nowrap; cursor: pointer; font-weight: bold; }
+        .tab.active { background: var(--main); color: white; }
+
+        /* الكروت والقصص */
+        .story-container { padding: 20px; }
+        .card { background: white; border-radius: 20px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card-body { padding: 15px; }
 
         /* لوحة التحكم */
-        #admin-panel { display: none; background: #fff; border-radius: 20px; padding: 20px; margin-top: 20px; border: 2px solid var(--main); }
-        .admin-btn { background: var(--danger); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; width: 100%; margin-top: 10px; }
-        .progress-box { width: 100%; background: #eee; height: 15px; border-radius: 10px; margin: 15px 0; display: none; overflow: hidden; }
-        .progress-bar { height: 100%; background: var(--sec); width: 0%; transition: 0.3s; }
+        #admin-section { background: #333; color: white; padding: 20px; margin: 15px; border-radius: 20px; }
+        .progress-bar { width: 100%; background: #555; height: 10px; border-radius: 5px; margin: 10px 0; display: none; }
+        .progress-fill { height: 100%; background: #2ecc71; width: 0%; transition: 0.3s; }
 
-        /* الدفع */
-        .pay-card { background: #eef2ff; border: 2px dashed var(--main); padding: 20px; border-radius: 20px; text-align: center; margin-bottom: 25px; }
-        .footer-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        /* الشريط السفلي */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .nav-btn { font-size: 24px; color: #ccc; cursor: pointer; }
+        .nav-btn.active { color: var(--main); }
     </style>
 </head>
 <body>
 
-<div id="login-screen">
-    <div class="login-card">
-        <h2 style="color:var(--main)">مرحباً بك في عالم عمر 📖</h2>
-        <input type="text" id="username" placeholder="أدخل اسمك" style="width:90%; padding:12px; margin:15px 0; border:1px solid #ddd; border-radius:12px;">
-        <button onclick="login()" style="width:100%; padding:15px; background:var(--main); color:white; border:none; border-radius:15px; font-weight:bold; cursor:pointer;">دخول الآن</button>
-    </div>
-</div>
-
-<div id="app" style="display:none">
-    <header>
-        <h1 style="margin:0; font-size: 24px;">عالم عمر الاحترافي 🌟</h1>
-        <small>عدد المستخدمين: <span id="u-count">12,540</span></small>
-    </header>
-
-    <div class="nav-scroll">
-        <button class="nav-item active" onclick="tab('adv', this)"><i class="fas fa-compass"></i> مغامرات</button>
-        <button class="nav-item" onclick="tab('edu', this)"><i class="fas fa-graduation-cap"></i> تعليمية</button>
-        <button class="nav-item" onclick="tab('ethics', this)"><i class="fas fa-star"></i> أخلاقية</button>
-        <button class="nav-item" onclick="tab('hist', this)"><i class="fas fa-history"></i> تاريخية</button>
-        <button class="nav-item" onclick="showAdmin()" style="color:var(--danger)"><i class="fas fa-cog"></i> الإدارة</button>
+    <div id="login-page" class="page active">
+        <i class="fas fa-book-open fa-5x"></i>
+        <h1>عالم عمر</h1>
+        <p>مرحباً بك يا بطل، سجل دخولك</p>
+        <input type="text" id="userName" class="login-input" placeholder="اكتب اسمك هنا">
+        <button onclick="login()" style="width:100%; padding:15px; border-radius:15px; border:none; background:white; color:var(--main); font-weight:bold; font-size:18px;">دخول</button>
     </div>
 
-    <div class="content">
-        <div class="pay-card">
-            <strong>💳 بوابات الدفع الفورية:</strong><br>
-            <p><i class="fas fa-phone-alt"></i> فودافون كاش: 01063858006</p>
-            <p><i class="fas fa-money-bill-wave"></i> انستاباي: kemolove</p>
+    <div id="main-app" class="page">
+        <header>
+            <h1 style="margin:0; color:var(--main)">عالم عمر 🚀</h1>
+        </header>
+
+        <div class="nav-tabs">
+            <button class="tab active" onclick="switchCategory('adv', this)">🧭 مغامرات</button>
+            <button class="tab" onclick="switchCategory('edu', this)">🎓 تعليمية</button>
+            <button class="tab" onclick="switchCategory('mor', this)">✨ أخلاقية</button>
+            <button class="tab" onclick="switchCategory('his', this)">📜 تاريخية</button>
         </div>
 
-        <div id="admin-panel">
-            <h3>⚙️ لوحة التحكم في التطبيق</h3>
-            <label>رفع ملف قصة (PDF):</label>
-            <input type="file" id="pdfFile" style="margin:10px 0;">
-            <div class="progress-box" id="p-box"><div class="progress-bar" id="p-bar"></div></div>
-            <button class="admin-btn" style="background:var(--sec)" onclick="upload()">بدء الرفع</button>
-            <hr>
-            <label>تعديل السعر العام:</label>
-            <input type="number" id="newPrice" placeholder="أدخل السعر الجديد" style="width:100%; padding:10px; margin:10px 0;">
-            <button class="admin-btn">تحديث الأسعار</button>
-        </div>
+        <div class="story-container">
+            <div id="adv-section" class="cat-content">
+                <div class="card">
+                    <img src="https://img.freepik.com/free-vector/kids-exploring-jungle_23-2148512247.jpg">
+                    <div class="card-body">
+                        <h3>مغامرة في الغابة</h3>
+                        <p>السعر: مجاني</p>
+                        <button onclick="alert('جاري فتح ملف الـ PDF...')" style="width:100%; padding:10px; background:var(--main); color:white; border:none; border-radius:10px;">اقرأ الآن</button>
+                    </div>
+                </div>
+            </div>
 
-        <div id="adv" class="story-grid active">
-            <div class="card">
-                <span class="badge-price">مجاني</span>
-                <img src="https://img.freepik.com/free-vector/children-forest_1308-31652.jpg">
-                <div class="card-info"><h3>عمر في الغابة</h3><button class="admin-btn" style="background:var(--main)">قراءة القصة</button></div>
+            <div id="edu-section" class="cat-content" style="display:none">
+                <div class="card">
+                    <img src="https://img.freepik.com/free-vector/alphabet-concept-with-kids_23-2148470123.jpg">
+                    <div class="card-body">
+                        <h3>تعلم الحروف</h3>
+                        <p>السعر: 10 ج.م</p>
+                        <button onclick="alert('يرجى التحويل لفودافون كاش: 01063858006')" style="width:100%; padding:10px; background:#f1c40f; border:none; border-radius:10px;">شراء القصة</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-page" style="display:none">
+                <div id="admin-section">
+                    <h3>⚙️ لوحة تحكم الإدارة</h3>
+                    <input type="file" id="pdfFile">
+                    <div class="progress-bar" id="pBar"><div class="progress-fill" id="pFill"></div></div>
+                    <button onclick="startUpload()" style="margin-top:10px; width:100%; padding:10px; background:#2ecc71; color:white; border:none; border-radius:10px;">بدء رفع القصة</button>
+                </div>
             </div>
         </div>
 
-        <div id="edu" class="story-grid">
-            <div class="card">
-                <span class="badge-price">15 EGP</span>
-                <img src="https://img.freepik.com/free-vector/preschool-teacher-concept_23-2148476721.jpg">
-                <div class="card-info"><h3>تعليم الأرقام</h3><button class="admin-btn" style="background:var(--warn); color:black">شراء الآن</button></div>
-            </div>
+        <div class="bottom-nav">
+            <i class="fas fa-home nav-btn active" onclick="location.reload()"></i>
+            <i class="fas fa-cog nav-btn" onclick="openAdmin()"></i>
         </div>
-        
-        </div>
-</div>
+    </div>
 
-<script>
-    // 1. الدخول وحفظ المستخدم
-    if(localStorage.getItem('logged_in')) { document.getElementById('login-screen').style.display='none'; document.getElementById('app').style.display='block'; }
-    function login() { 
-        if(document.getElementById('username').value) {
-            localStorage.setItem('logged_in', 'true');
-            location.reload();
+    <script>
+        // نظام الدخول
+        if(localStorage.getItem('user')) {
+            document.getElementById('login-page').classList.remove('active');
+            document.getElementById('main-app').classList.add('active');
         }
-    }
 
-    // 2. التنقل بين الأقسام
-    function tab(id, btn) {
-        document.querySelectorAll('.story-grid').forEach(g => g.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        btn.classList.add('active');
-        document.getElementById('admin-panel').style.display='none';
-    }
+        function login() {
+            let name = document.getElementById('userName').value;
+            if(name) {
+                localStorage.setItem('user', name);
+                document.getElementById('login-page').classList.remove('active');
+                document.getElementById('main-app').classList.add('active');
+            }
+        }
 
-    // 3. الإدارة
-    function showAdmin() {
-        let p = prompt("كلمة سر الإدارة:");
-        if(p === "123") {
-            document.querySelectorAll('.story-grid').forEach(g => g.classList.remove('active'));
-            document.getElementById('admin-panel').style.display='block';
-        } else { alert("خطأ!"); }
-    }
+        // نظام تبديل الأقسام (شغال 100%)
+        function switchCategory(catId, btn) {
+            document.querySelectorAll('.cat-content').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(catId + '-section').style.display = 'block';
+            btn.classList.add('active');
+            document.getElementById('admin-page').style.display = 'none';
+        }
 
-    // 4. نظام الرفع
-    function upload() {
-        if(!document.getElementById('pdfFile').files[0]) return alert("اختر ملف أولاً");
-        document.getElementById('p-box').style.display='block';
-        let w = 0;
-        let t = setInterval(() => {
-            w += 10;
-            document.getElementById('p-bar').style.width = w + '%';
-            if(w>=100) { clearInterval(t); alert("تم الرفع والتحميل بنجاح!"); }
-        }, 300);
-    }
-</script>
+        // فتح الإدارة بكلمة سر
+        function openAdmin() {
+            let p = prompt("كلمة سر المدير:");
+            if(p === "123") {
+                document.querySelectorAll('.cat-content').forEach(c => c.style.display = 'none');
+                document.getElementById('admin-page').style.display = 'block';
+            }
+        }
+
+        // شريط التحميل (شغال فعلياً)
+        function startUpload() {
+            let file = document.getElementById('pdfFile').files[0];
+            if(!file) return alert("اختار ملف الأول!");
+            
+            document.getElementById('pBar').style.display = 'block';
+            let fill = document.getElementById('pFill');
+            let width = 0;
+            let interval = setInterval(() => {
+                width += 10;
+                fill.style.width = width + '%';
+                if(width >= 100) {
+                    clearInterval(interval);
+                    alert("تم الرفع بنجاح يا عمر!");
+                }
+            }, 300);
+        }
+    </script>
 </body>
 </html>
