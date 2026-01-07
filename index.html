@@ -3,190 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عالم عمر | القصص الاحترافية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@500;800&display=swap" rel="stylesheet">
+    <title>عالم عمر 📖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4e73df;
-            --secondary: #f8f9fc;
-            --gold: #f6c23e;
-            --success: #1cc88a;
-            --dark: #5a5c69;
-        }
+        body { font-family: 'Cairo', sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; text-align: center; }
+        .app-header { margin-bottom: 30px; }
+        .app-header h1 { color: #2c3e50; font-size: 32px; margin: 0; }
+        
+        .stories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1000px; margin: 0 auto; }
+        
+        .story-card { background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); position: relative; padding-bottom: 15px; }
+        
+        /* علامة مجاني أو مدفوع */
+        .badge { position: absolute; top: 15px; left: 15px; padding: 5px 15px; border-radius: 20px; color: white; font-size: 14px; font-weight: bold; }
+        .badge-free { background: #ff4757; }
+        .badge-paid { background: #ffa502; }
 
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: var(--secondary);
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-
-        /* شاشة تسجيل الدخول */
-        #login-screen {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            color: white;
-            text-align: center;
-        }
-
-        .login-card {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            color: var(--dark);
-            width: 80%;
-            max-width: 350px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .login-card h2 { margin-bottom: 20px; color: var(--primary); }
-
-        .btn-google {
-            background: #ea4335;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-        }
-
-        /* الواجهة الرئيسية */
-        .main-app { display: none; padding-top: 20px; }
-
-        .app-header {
-            padding: 20px;
-            text-align: center;
-            background: white;
-            margin: 0 15px 20px 15px;
-            border-radius: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .app-header h1 { color: var(--primary); margin: 0; font-size: 28px; }
-
-        /* نظام البطاقات الاحترافي */
-        .stories-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            padding: 0 15px;
-        }
-
-        .story-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-            position: relative;
-        }
-
-        .badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            z-index: 10;
-        }
-
-        .badge-free { background: var(--success); }
-        .badge-paid { background: var(--gold); }
-
-        .story-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-        }
-
-        .story-info { padding: 20px; }
-        .story-info h3 { margin: 0 0 10px 0; font-size: 20px; color: #333; }
-
-        .rating { color: var(--gold); margin-bottom: 10px; font-size: 18px; }
-
-        .comment-box {
-            background: #fdfdfd;
-            border-right: 3px solid var(--primary);
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 13px;
-            font-style: italic;
-            color: #777;
-        }
-
-        .btn-read {
-            background: var(--primary);
-            color: white;
-            width: 100%;
-            border: none;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        .story-image { width: 100%; height: 200px; object-fit: cover; }
+        
+        .story-info { padding: 15px; text-align: right; }
+        .story-title { font-size: 20px; color: #333; margin: 5px 0; }
+        .rating { color: #f1c40f; font-size: 18px; margin: 5px 0; }
+        
+        .comment-section { background: #f9f9f9; padding: 10px; border-radius: 10px; margin: 10px 0; font-size: 13px; color: #666; border-right: 4px solid #3498db; }
+        
+        .buttons-group { display: flex; gap: 10px; padding: 0 15px; }
+        .btn { flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-read { background: #3498db; color: white; }
+        .btn-details { background: #f39c12; color: white; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-card">
-            <h2>مرحباً بك 🌟</h2>
-            <p>سجل دخولك لاستكشاف أجمل قصص عالم عمر</p>
-            <button class="btn-google" onclick="login()">الدخول عبر Google</button>
-        </div>
+    <div class="app-header">
+        <h1>عالم عمر 📖</h1>
+        <p>مغامرات كرتونية لا تنتهي</p>
     </div>
 
-    <div id="app" class="main-app">
-        <div class="app-header">
-            <h1>عالم عمر 📖</h1>
-            <p>قصص خيالية للأطفال المبدعين</p>
-        </div>
-
-        <div class="stories-grid">
-            <div class="story-card">
-                <span class="badge badge-free">مجاني</span>
-                <img src="https://images.unsplash.com/photo-1476231682828-37e571bc172f?q=80&w=500" class="story-image">
-                <div class="story-info">
-                    <h3>مغامرة عمر في الغابة السحرية</h3>
-                    <div class="rating">★★★★★</div>
-                    <div class="comment-box">"قصة ممتعة جداً وصورها رائعة!" - أحمد</div>
-                    <button class="btn-read">اقرأ الآن</button>
+    <div class="stories-grid">
+        <div class="story-card">
+            <span class="badge badge-free">مجاني</span>
+            <img src="https://img.freepik.com/free-vector/forest-scene-with-various-forest-trees_1308-54522.jpg" class="story-image">
+            <div class="story-info">
+                <div class="story-title">عمر في الغابة الخضراء</div>
+                <div class="rating">★★★★★</div>
+                <div class="comment-section">"أجمل مغامرة كرتونية شفتها!" - علاء</div>
+                <div class="buttons-group">
+                    <button class="btn btn-read">اقرأ الآن</button>
+                    <button class="btn btn-details">التفاصيل</button>
                 </div>
             </div>
+        </div>
 
-            <div class="story-card">
-                <span class="badge badge-paid">مدفوع ⭐</span>
-                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500" class="story-image">
-                <div class="story-info">
-                    <h3>عمر ورحلة الفضاء العجيبة</h3>
-                    <div class="rating">★★★★☆</div>
-                    <div class="comment-box">"ابني أحب هذه القصة كثيراً" - مريم</div>
-                    <button class="btn-read" style="background: var(--gold);">اطلب القصة الآن</button>
+        <div class="story-card">
+            <span class="badge badge-paid">مدفوع ⭐</span>
+            <img src="https://img.freepik.com/free-vector/flat-galaxy-background_23-2148965701.jpg" class="story-image">
+            <div class="story-info">
+                <div class="story-title">رحلة الفضاء العجيبة</div>
+                <div class="rating">★★★★★</div>
+                <div class="comment-section">"الصور في الفضاء خيالية" - مريم</div>
+                <div class="buttons-group">
+                    <button class="btn btn-read" style="background: #e67e22;">شراء القصة</button>
+                    <button class="btn btn-details">التفاصيل</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function login() {
-            // هنا محاكاة للدخول، لربطها بـ Firebase نحتاج ملف firebase-config
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app').style.display = 'block';
-        }
-    </script>
 </body>
 </html>
