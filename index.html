@@ -14,47 +14,50 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* دمج القصص داخل منطقة المحتوى الأساسية */
-        #dynamic-content {
-            margin-top: -20px; /* لتقريب القصص من أزرار التسجيل */
-            padding: 15px;
+        /* تنسيق يضمن اندماج النظام مع التصميم الأصلي */
+        #dynamic-section {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
             position: relative;
-            z-index: 100;
+            z-index: 10;
         }
-        .story-item {
-            background: white;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #eee;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        #adminPanel {
-            background: #fff9db;
-            border: 2px solid #fab005;
-            border-radius: 12px;
+        .omar-card {
+            background: #ffffff;
+            border-radius: 16px;
             padding: 15px;
-            margin: 10px;
+            margin-top: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
+        }
+        .admin-panel {
+            background: #fff5f0;
+            border: 2px dashed #ff6b00;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div id="root"></div>
 
-    <div id="dynamic-content" class="max-w-md mx-auto">
+    <div id="dynamic-section">
         
-        <div id="adminPanel" class="hidden">
-            <h3 class="text-center font-bold text-orange-600 mb-2 text-sm">إضافة قصة جديدة</h3>
-            <input id="sTitle" type="text" placeholder="اسم القصة" class="w-full p-2 mb-2 rounded border text-sm">
-            <input id="sPrice" type="number" placeholder="السعر" class="w-full p-2 mb-2 rounded border text-sm">
-            <button onclick="addStory()" class="w-full bg-orange-500 text-white py-2 rounded font-bold text-sm">نشر القصة</button>
+        <div id="adminPanel" class="hidden admin-panel">
+            <h3 class="text-orange-700 font-bold text-center mb-3">⚙️ إضافة قصة جديدة</h3>
+            <input id="sTitle" type="text" placeholder="اسم القصة" class="w-full p-3 mb-2 rounded-xl border-none shadow-inner bg-white outline-none">
+            <input id="sPrice" type="number" placeholder="السعر" class="w-full p-3 mb-3 rounded-xl border-none shadow-inner bg-white outline-none">
+            <button onclick="addStory()" class="w-full bg-[#ff6b00] text-white py-3 rounded-xl font-bold shadow-lg hover:bg-orange-600 transition">نشر الآن</button>
         </div>
 
-        <div id="storiesList"></div>
+        <div id="storiesContainer">
+            </div>
     </div>
 
     <script>
-        // إعدادات Firebase
+        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyBn-8ER3jyhEx6Fm4bM6uG9-fIoikHrT_c",
             authDomain: "ana-omar-b0e6c.firebaseapp.com",
@@ -68,7 +71,7 @@
         const db = firebase.firestore();
         const adminEmail = "kemoloveone1234@gmail.com";
 
-        // متابعة حالة الدخول (لربطها بتصميمك الأساسي)
+        // مراقبة حالة المستخدم
         auth.onAuthStateChanged(user => {
             if (user && user.email === adminEmail) {
                 document.getElementById('adminPanel').classList.remove('hidden');
@@ -87,45 +90,29 @@
 
         function loadStories() {
             db.collection("stories").orderBy("time", "desc").onSnapshot(snap => {
-                const list = document.getElementById('storiesList');
-                list.innerHTML = '';
+                const container = document.getElementById('storiesContainer');
+                container.innerHTML = '';
                 snap.forEach(doc => {
                     const s = doc.data();
                     const isAdmin = auth.currentUser && auth.currentUser.email === adminEmail;
-                    list.innerHTML += `
-                        <div class="story-item">
+                    container.innerHTML += `
+                        <div class="omar-card">
                             <div class="flex justify-between items-center">
                                 <div>
-                                    <h4 class="font-bold text-gray-800">${s.title}</h4>
-                                    <p class="text-blue-600 text-xs">${s.price} جنيه</p>
+                                    <h4 class="font-bold text-gray-800 text-lg">${s.title}</h4>
+                                    <span class="text-orange-600 font-bold">${s.price} جنيه</span>
                                 </div>
-                                <a href="https://wa.me/201063858006?text=أريد شراء: ${s.title}" class="bg-green-500 text-white px-3 py-1 rounded text-xs">طلب</a>
+                                <a href="https://wa.me/201063858006?text=أريد شراء: ${s.title}" class="bg-green-500 text-white px-5 py-2 rounded-full font-bold shadow-sm">شراء</a>
                             </div>
-                            ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="text-red-400 text-[10px] mt-1">حذف</button>` : ''}
+                            ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="text-red-400 text-xs mt-3 underline">حذف القصة</button>` : ''}
                         </div>`;
                 });
             });
         }
 
         function deleteStory(id) {
-            if(confirm("حذف؟")) db.collection("stories").doc(id).delete();
+            if(confirm("هل تريد حذف هذه القصة؟")) db.collection("stories").doc(id).delete();
         }
-
-        // كود إضافي لضمان الاندماج مع أزرار تصميمك الأصلي
-        window.addEventListener('load', () => {
-            // محاولة ربط زر "تسجيل الدخول" الموجود في تصميمك الأصلي بـ Firebase
-            setTimeout(() => {
-                const loginBtns = document.querySelectorAll('button, a');
-                loginBtns.forEach(btn => {
-                    if(btn.innerText.includes('دخول') || btn.innerText.includes('Login')) {
-                        btn.onclick = (e) => {
-                            e.preventDefault();
-                            auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-                        };
-                    }
-                });
-            }, 2000);
-        });
     </script>
 </body>
 </html>
