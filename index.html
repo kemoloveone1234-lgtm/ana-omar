@@ -3,115 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أنا عمر - عالم القصص</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <title>عالم عمر | القصص الاحترافية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Tajawal:wght@500;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f0f9ff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .story-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
-        .story-card:hover { transform: translateY(-3px); }
-        #adminPanel { display: none; background: #fff; border: 2px solid #3b82f6; border-radius: 15px; padding: 15px; margin-bottom: 20px; }
-        .header-bg { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 20px; border-radius: 0 0 25px 25px; text-align: center; }
+        :root {
+            --primary: #4e73df;
+            --secondary: #f8f9fc;
+            --gold: #f6c23e;
+            --success: #1cc88a;
+            --dark: #5a5c69;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--secondary);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* شاشة تسجيل الدخول */
+        #login-screen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            color: white;
+            text-align: center;
+        }
+
+        .login-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            color: var(--dark);
+            width: 80%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .login-card h2 { margin-bottom: 20px; color: var(--primary); }
+
+        .btn-google {
+            background: #ea4335;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        /* الواجهة الرئيسية */
+        .main-app { display: none; padding-top: 20px; }
+
+        .app-header {
+            padding: 20px;
+            text-align: center;
+            background: white;
+            margin: 0 15px 20px 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .app-header h1 { color: var(--primary); margin: 0; font-size: 28px; }
+
+        /* نظام البطاقات الاحترافي */
+        .stories-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 0 15px;
+        }
+
+        .story-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            z-index: 10;
+        }
+
+        .badge-free { background: var(--success); }
+        .badge-paid { background: var(--gold); }
+
+        .story-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .story-info { padding: 20px; }
+        .story-info h3 { margin: 0 0 10px 0; font-size: 20px; color: #333; }
+
+        .rating { color: var(--gold); margin-bottom: 10px; font-size: 18px; }
+
+        .comment-box {
+            background: #fdfdfd;
+            border-right: 3px solid var(--primary);
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 13px;
+            font-style: italic;
+            color: #777;
+        }
+
+        .btn-read {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div class="header-bg mb-6">
-        <h1 class="text-2xl font-bold">مرحباً بك في عالم عمر</h1>
-        <p class="text-sm opacity-90">استمتع بأجمل القصص الأخلاقية والتربوية</p>
+    <div id="login-screen">
+        <div class="login-card">
+            <h2>مرحباً بك 🌟</h2>
+            <p>سجل دخولك لاستكشاف أجمل قصص عالم عمر</p>
+            <button class="btn-google" onclick="login()">الدخول عبر Google</button>
+        </div>
     </div>
 
-    <div class="container mx-auto px-4 pb-20">
-        
-        <div id="adminPanel">
-            <h3 class="font-bold mb-3 text-blue-600 text-center">إضافة قصة جديدة (خاص بعمر)</h3>
-            <input type="text" id="storyTitle" placeholder="عنوان القصة" class="w-full border p-2 rounded mb-2 text-sm">
-            <input type="number" id="storyPrice" placeholder="السعر (جنيه)" class="w-full border p-2 rounded mb-2 text-sm">
-            <button onclick="addStory()" class="w-full bg-blue-600 text-white py-2 rounded font-bold">حفظ ونشر القصة</button>
+    <div id="app" class="main-app">
+        <div class="app-header">
+            <h1>عالم عمر 📖</h1>
+            <p>قصص خيالية للأطفال المبدعين</p>
         </div>
 
-        <div id="storiesList" class="space-y-4">
-            <p class="text-center text-gray-500">جاري تحميل القصص الجميلة...</p>
+        <div class="stories-grid">
+            <div class="story-card">
+                <span class="badge badge-free">مجاني</span>
+                <img src="https://images.unsplash.com/photo-1476231682828-37e571bc172f?q=80&w=500" class="story-image">
+                <div class="story-info">
+                    <h3>مغامرة عمر في الغابة السحرية</h3>
+                    <div class="rating">★★★★★</div>
+                    <div class="comment-box">"قصة ممتعة جداً وصورها رائعة!" - أحمد</div>
+                    <button class="btn-read">اقرأ الآن</button>
+                </div>
+            </div>
+
+            <div class="story-card">
+                <span class="badge badge-paid">مدفوع ⭐</span>
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=500" class="story-image">
+                <div class="story-info">
+                    <h3>عمر ورحلة الفضاء العجيبة</h3>
+                    <div class="rating">★★★★☆</div>
+                    <div class="comment-box">"ابني أحب هذه القصة كثيراً" - مريم</div>
+                    <button class="btn-read" style="background: var(--gold);">اطلب القصة الآن</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // 1. إعدادات Firebase (ضع إعداداتك هنا)
-        const firebaseConfig = {
-            apiKey: "AIzaSy...", 
-            authDomain: "ana-omar-app.firebaseapp.com",
-            projectId: "ana-omar-app",
-            storageBucket: "ana-omar-app.appspot.com",
-            messagingSenderId: "...",
-            appId: "..."
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // 2. نظام اللوحة السرية (5 ضغطات)
-        let clickCount = 0;
-        document.querySelector('.header-bg').onclick = function() {
-            clickCount++;
-            if (clickCount === 5) {
-                document.getElementById('adminPanel').style.display = 'block';
-                alert('مرحباً عمر! تم فتح لوحة التحكم');
-            }
-        };
-
-        // 3. تحميل القصص من قاعدة البيانات
-        function loadStories() {
-            db.collection("stories").orderBy("time", "desc").onSnapshot(snap => {
-                const list = document.getElementById('storiesList');
-                list.innerHTML = '';
-                if (snap.empty) {
-                    list.innerHTML = '<p class="text-center">لا توجد قصص حالياً. انتظر جديد عمر!</p>';
-                }
-                snap.forEach(doc => {
-                    const s = doc.data();
-                    list.innerHTML += `
-                        <div class="story-card flex justify-between items-center">
-                            <div>
-                                <h4 class="font-bold text-gray-800">${s.title}</h4>
-                                <span class="text-blue-600 font-bold text-sm">${s.price} جنيه</span>
-                            </div>
-                            <button onclick="payWhatsApp('${s.title}', '${s.price}')" 
-                                class="bg-green-500 text-white px-5 py-2 rounded-full text-xs font-bold shadow-md">
-                                شراء الآن
-                            </button>
-                        </div>`;
-                });
-            });
+        function login() {
+            // هنا محاكاة للدخول، لربطها بـ Firebase نحتاج ملف firebase-config
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
         }
-
-        // 4. إضافة قصة جديدة
-        function addStory() {
-            const title = document.getElementById('storyTitle').value;
-            const price = document.getElementById('storyPrice').value;
-            if(title && price) {
-                db.collection("stories").add({
-                    title: title,
-                    price: price,
-                    time: Date.now()
-                }).then(() => {
-                    alert('تمت الإضافة بنجاح!');
-                    document.getElementById('storyTitle').value = '';
-                    document.getElementById('storyPrice').value = '';
-                    document.getElementById('adminPanel').style.display = 'none';
-                    clickCount = 0;
-                });
-            }
-        }
-
-        // 5. نظام الدفع عبر الواتساب
-        function payWhatsApp(title, price) {
-            const myNumber = "201063858006"; // رقمك
-            const message = `أهلاً عمر، أريد شراء قصة: ${title}\nالسعر: ${price} جنيه\n\nطرق الدفع:\n- فودافون كاش: 01063858006\n- انستا باي: omar@instapay`;
-            window.location.href = `https://wa.me/${myNumber}?text=${encodeURIComponent(message)}`;
-        }
-
-        // تشغيل التحميل عند فتح التطبيق
-        loadStories();
     </script>
 </body>
 </html>
