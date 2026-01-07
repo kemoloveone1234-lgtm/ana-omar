@@ -14,47 +14,63 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* إخفاء أي عناصر إضافية وضمان ظهور القصص كجزء من التصميم */
-        #stories-layer {
+        /* إخفاء لوحة التحكم تماماً */
+        #adminPanel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 350px;
+        }
+        
+        .story-layer {
             position: relative;
             z-index: 10;
-            margin-top: -50px; /* لدمج القصص مع التصميم العلوي */
-            padding: 20px;
+            margin-top: -20px;
+            padding: 15px;
         }
-        .clean-story-card {
+
+        .clean-card {
             background: white;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
         }
-        /* المربع البرتقالي مخفي تماماً الآن */
-        #adminPanel {
-            display: none; 
-            background: #fff9f5;
-            border: 1px solid #ffccbc;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
+
+        /* الطبقة الشفافة التي تغلق اللوحة */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
         }
-        /* سيظهر المربع فقط عند تسجيل دخولك أنت */
-        .show-admin { display: block !important; }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root" onclick="checkAdminClick()"></div>
 
-    <div id="stories-layer" class="max-w-md mx-auto">
-        <div id="adminPanel">
-            <h3 class="text-center font-bold text-orange-600 mb-2">إضافة قصة</h3>
-            <input id="sTitle" type="text" placeholder="العنوان" class="w-full p-2 mb-2 border rounded-lg outline-none">
-            <input id="sPrice" type="number" placeholder="السعر" class="w-full p-2 mb-2 border rounded-lg outline-none">
-            <button onclick="addStory()" class="w-full bg-orange-500 text-white py-2 rounded-lg font-bold">حفظ</button>
-        </div>
+    <div id="overlay" onclick="closeAdmin()"></div>
 
-        <div id="storiesList"></div>
+    <div id="adminPanel">
+        <h3 class="text-center font-bold mb-4">لوحة الإضافة السرية</h3>
+        <input id="sTitle" type="text" placeholder="اسم القصة" class="w-full p-2 mb-2 border rounded">
+        <input id="sPrice" type="number" placeholder="السعر" class="w-full p-2 mb-4 border rounded">
+        <button onclick="addStory()" class="w-full bg-blue-600 text-white py-2 rounded mb-2">حفظ القصة</button>
+        <button onclick="closeAdmin()" class="w-full text-gray-400 text-sm">إغلاق</button>
     </div>
+
+    <div class="story-layer max-w-md mx-auto" id="storiesList">
+        </div>
 
     <script>
         const firebaseConfig = {
@@ -66,22 +82,31 @@
             appId: "1:781802661336:web:25736ef0b6b27f15167ead"
         };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
-        const adminEmail = "kemoloveone1234@gmail.com";
 
-        auth.onAuthStateChanged(user => {
-            if (user && user.email === adminEmail) {
-                document.getElementById('adminPanel').classList.add('show-admin');
+        // طريقة فتح اللوحة: اضغط 5 مرات متتالية بسرعة على الشاشة
+        let clickCount = 0;
+        function checkAdminClick() {
+            clickCount++;
+            if (clickCount === 5) {
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('overlay').style.display = 'block';
+                clickCount = 0;
             }
-            loadStories();
-        });
+            setTimeout(() => { clickCount = 0; }, 2000);
+        }
+
+        function closeAdmin() {
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
 
         function addStory() {
             const title = document.getElementById('sTitle').value;
             const price = document.getElementById('sPrice').value;
             if(!title || !price) return;
             db.collection("stories").add({ title, price, time: Date.now() });
+            closeAdmin();
             document.getElementById('sTitle').value = "";
             document.getElementById('sPrice').value = "";
         }
@@ -92,25 +117,11 @@
                 list.innerHTML = '';
                 snap.forEach(doc => {
                     const s = doc.data();
-                    const isAdmin = auth.currentUser && auth.currentUser.email === adminEmail;
                     list.innerHTML += `
-                        <div class="clean-story-card">
+                        <div class="clean-card">
                             <div class="flex justify-between items-center">
                                 <div>
                                     <h4 class="font-bold text-gray-800">${s.title}</h4>
-                                    <span class="text-orange-600 font-bold text-sm">${s.price} ج.م</span>
+                                    <span class="text-blue-600 font-bold text-xs">${s.price} جنيه</span>
                                 </div>
-                                <a href="https://wa.me/201063858006?text=أريد: ${s.title}" class="bg-green-500 text-white px-4 py-1 rounded-full text-xs font-bold">طلب</a>
-                            </div>
-                            ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="text-red-300 text-[10px] mt-2">حذف</button>` : ''}
-                        </div>`;
-                });
-            });
-        }
-
-        function deleteStory(id) {
-            if(confirm("حذف؟")) db.collection("stories").doc(id).delete();
-        }
-    </script>
-</body>
-</html>
+                                <a href="
