@@ -1,53 +1,70 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تطبيق أنا عمر - المطور</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8" />
+    <title>تطبيق أنا عمر</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <script type="module" crossorigin src="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/assets/index-pDdOUBjD.js"></script>
+    <link rel="stylesheet" crossorigin href="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/assets/index-DFK4dfQq.css">
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .omar-header { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
-        .story-card { transition: transform 0.2s; border-radius: 15px; overflow: hidden; }
-        .story-card:hover { transform: translateY(-5px); }
+        /* دمج النظام ليكون فوق خلفية التطبيق */
+        #main-overlay {
+            position: absolute;
+            top: 250px; /* مكان ظهور القصص فوق تصميمك */
+            left: 0;
+            right: 0;
+            z-index: 50;
+            padding: 20px;
+        }
+        .story-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        #adminPanel {
+            background: #fff3e0;
+            border: 2px dashed #ff9800;
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        /* لإخفاء أي فراغ زائد أسفل التصميم */
+        body, html { overflow-x: hidden; }
     </style>
 </head>
 <body>
-    <div class="max-w-md mx-auto min-h-screen bg-white shadow-2xl flex flex-col">
-        <header class="omar-header p-8 text-white text-center shadow-lg">
-            <h1 class="text-3xl font-bold mb-2">📚 عالم عمر للقصص</h1>
-            <p id="userWelcome" class="text-blue-100 text-sm italic"></p>
-        </header>
+    <div id="root"></div>
 
-        <div id="adminArea" class="hidden p-6 bg-blue-50 border-b-2 border-blue-200">
-            <h2 class="font-bold text-blue-800 mb-4 flex items-center gap-2">✨ إضافة قصة جديدة</h2>
-            <input id="titleInput" type="text" placeholder="عنوان القصة" class="w-full p-3 mb-3 border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-500">
-            <input id="priceInput" type="number" placeholder="السعر (جنيه)" class="w-full p-3 mb-4 border-2 border-blue-200 rounded-xl">
-            <button onclick="publishStory()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg active:scale-95 transition">نشر الآن 🚀</button>
+    <div id="main-overlay" class="max-w-md mx-auto">
+        
+        <div id="adminPanel" class="hidden">
+            <h3 class="text-orange-800 font-bold text-center mb-3">🛠 إضافة قصة جديدة</h3>
+            <input id="sTitle" type="text" placeholder="اسم القصة" class="w-full p-2 mb-2 rounded-lg border-none shadow-sm outline-none text-sm">
+            <input id="sPrice" type="number" placeholder="السعر" class="w-full p-2 mb-3 rounded-lg border-none shadow-sm outline-none text-sm">
+            <button onclick="addStory()" class="w-full bg-orange-500 text-white py-2 rounded-lg font-bold shadow-md">نشر الآن</button>
         </div>
 
-        <main class="p-6 flex-grow">
-            <div id="loginWall" class="text-center py-20">
-                <div class="mb-6 text-5xl">📖</div>
-                <h3 class="text-xl font-bold text-gray-700 mb-4">سجل دخولك لتصفح القصص</h3>
-                <button onclick="signIn()" class="bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-full font-bold shadow hover:bg-gray-50 flex items-center justify-center gap-2 mx-auto">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20"> دخول بواسطة جوجل
-                </button>
+        <div id="loginArea" class="text-center mb-4">
+            <button onclick="login()" id="loginBtn" class="text-[10px] text-gray-400 opacity-50 hover:opacity-100">دخول الإدارة</button>
+        </div>
+
+        <div id="storiesDisplay">
             </div>
-
-            <div id="list" class="space-y-6"></div>
-        </main>
-
-        <footer class="p-4 text-center text-gray-400 text-xs border-t">
-            جميع الحقوق محفوظة لعمر © 2026
-        </footer>
     </div>
 
     <script>
-        const config = {
+        const firebaseConfig = {
             apiKey: "AIzaSyBn-8ER3jyhEx6Fm4bM6uG9-fIoikHrT_c",
             authDomain: "ana-omar-b0e6c.firebaseapp.com",
             projectId: "ana-omar-b0e6c",
@@ -55,56 +72,56 @@
             messagingSenderId: "781802661336",
             appId: "1:781802661336:web:25736ef0b6b27f15167ead"
         };
-        firebase.initializeApp(config);
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const boss = "kemoloveone1234@gmail.com";
+        const adminEmail = "kemoloveone1234@gmail.com";
 
-        function signIn() {
+        function login() {
             auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
         }
 
         auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('loginWall').classList.add('hidden');
-                document.getElementById('userWelcome').innerText = "مرحباً بك يا " + user.displayName;
-                if(user.email === boss) document.getElementById('adminArea').classList.remove('hidden');
-                fetchData();
+            if (user && user.email === adminEmail) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('loginArea').classList.add('hidden');
             }
+            loadStories();
         });
 
-        function publishStory() {
-            const t = document.getElementById('titleInput').value;
-            const p = document.getElementById('priceInput').value;
-            if(!t || !p) return alert("امسح الخانات واكتب بيانات صحيحة");
-            db.collection("stories").add({ t, p, date: Date.now() }).then(() => {
-                document.getElementById('titleInput').value = "";
-                document.getElementById('priceInput').value = "";
-            });
+        function addStory() {
+            const title = document.getElementById('sTitle').value;
+            const price = document.getElementById('sPrice').value;
+            if(!title || !price) return;
+            db.collection("stories").add({ title, price, time: Date.now() });
+            document.getElementById('sTitle').value = "";
+            document.getElementById('sPrice').value = "";
         }
 
-        function fetchData() {
-            db.collection("stories").orderBy("date", "desc").onSnapshot(snap => {
-                const list = document.getElementById('list');
+        function loadStories() {
+            db.collection("stories").orderBy("time", "desc").onSnapshot(snap => {
+                const list = document.getElementById('storiesDisplay');
                 list.innerHTML = '';
                 snap.forEach(doc => {
-                    const data = doc.data();
-                    const isBoss = auth.currentUser?.email === boss;
+                    const s = doc.data();
+                    const isAdmin = auth.currentUser && auth.currentUser.email === adminEmail;
                     list.innerHTML += `
-                        <div class="story-card bg-white p-5 shadow-md border-r-4 border-blue-500">
-                            <h3 class="text-xl font-bold text-gray-800">${data.t}</h3>
-                            <p class="text-blue-600 font-bold text-lg mt-2">${data.p} ج.م</p>
-                            <div class="mt-4 flex gap-2">
-                                <a href="https://wa.me/201063858006?text=طلب قصة: ${data.t}" class="flex-grow bg-green-500 text-white text-center py-2 rounded-lg font-bold">شراء عبر واتساب</a>
-                                ${isBoss ? `<button onclick="removeItem('${doc.id}')" class="bg-red-50 text-red-500 px-4 rounded-lg border border-red-100 text-sm font-bold">حذف</button>` : ''}
+                        <div class="story-card animate__animated animate__fadeIn">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-lg">${s.title}</h4>
+                                    <span class="text-blue-600 font-bold">${s.price} جنيه</span>
+                                </div>
+                                <a href="https://wa.me/201063858006?text=أريد شراء: ${s.title}" class="bg-green-500 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm">طلب</a>
                             </div>
+                            ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="text-red-400 text-[10px] mt-2 block">حذف القصة</button>` : ''}
                         </div>`;
                 });
             });
         }
 
-        function removeItem(id) {
-            if(confirm("حذف هذه القصة؟")) db.collection("stories").doc(id).delete();
+        function deleteStory(id) {
+            if(confirm("حذف؟")) db.collection("stories").doc(id).delete();
         }
     </script>
 </body>
