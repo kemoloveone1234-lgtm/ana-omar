@@ -2,153 +2,136 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>عالم عمر الاحترافي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عالم عمر - التطبيق الحقيقي</title>
     <style>
-        :root { --main: #4e73df; --bg: #f8f9fc; --text: #5a5c69; }
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-        body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 70px; }
-
-        /* الصفحات */
+        /* تنسيق كرتوني واحترافي */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f3; margin: 0; text-align: center; }
         .page { display: none; padding: 20px; min-height: 100vh; }
-        .page.active { display: block; }
-
+        .active { display: block; }
+        
         /* شاشة الدخول */
-        #login-page { background: var(--main); color: white; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
-        /* الهيدر والأقسام */
-        .app-header { background: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 0 0 20px 20px; }
-        .nav-tabs { display: flex; overflow-x: auto; gap: 10px; padding: 15px 0; }
-        .tab-btn { padding: 8px 20px; border-radius: 50px; border: 2px solid var(--main); background: white; color: var(--main); white-space: nowrap; cursor: pointer; font-weight: bold; }
-        .tab-btn.active { background: var(--main); color: white; }
-
-        /* كروت القصص */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 10px; }
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05); cursor: pointer; }
-        .card img { width: 100%; height: 120px; object-fit: cover; }
-        .card h3 { font-size: 14px; padding: 10px; margin: 0; text-align: center; }
-
-        /* لوحة التحكم */
-        .admin-box { background: #fff; padding: 20px; border-radius: 20px; border: 2px dashed #ccc; }
-        .progress-bar { width: 100%; background: #eee; height: 10px; border-radius: 5px; margin-top: 10px; display: none; }
-        .progress-fill { height: 100%; background: #1cc88a; width: 0%; transition: 0.3s; }
-
-        /* الشريط السفلي */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; z-index: 1000; }
-        .nav-link { color: #d1d3e2; font-size: 22px; cursor: pointer; }
-        .nav-link.active { color: var(--main); }
+        #login { background: #4a90e2; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        input { padding: 15px; border-radius: 10px; border: none; width: 80%; margin: 20px 0; font-size: 18px; }
+        
+        /* الأقسام والزراير */
+        .header { background: #fff; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 24px; font-weight: bold; color: #4a90e2; }
+        .btn-cat { width: 45%; padding: 20px 10px; margin: 5px; border: none; border-radius: 15px; color: white; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .bg-red { background: #ff5e57; } .bg-green { background: #1dd1a1; } .bg-blue { background: #54a0ff; } .bg-orange { background: #ff9f43; }
+        
+        /* الكروت */
+        .story-card { background: white; border-radius: 20px; padding: 15px; margin: 15px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .story-card img { width: 100%; border-radius: 15px; height: 150px; object-fit: cover; }
+        .read-btn { background: #4a90e2; color: white; border: none; padding: 10px 20px; border-radius: 10px; margin-top: 10px; width: 100%; font-weight: bold; }
+        
+        /* شريط سفلي */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #ddd; }
+        .nav-item { cursor: pointer; color: #777; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="page-login" class="page active">
-        <i class="fas fa-rocket fa-4xl" style="font-size: 80px; margin-bottom: 20px;"></i>
-        <h1>عالم عمر</h1>
-        <input type="text" id="user-input" placeholder="اكتب اسمك" style="padding:15px; border-radius:10px; border:none; width:80%;">
-        <button onclick="startApp()" style="margin-top:20px; padding:15px 40px; border-radius:50px; border:none; background:white; color:var(--main); font-weight:bold;">ابدأ الآن</button>
+    <div id="loginPage" class="page active">
+        <h1>مرحباً بك في عالم عمر 📖</h1>
+        <p>اكتب اسمك عشان نبدأ المغامرة</p>
+        <input type="text" id="userName" placeholder="اسمك هنا...">
+        <button class="btn-cat bg-green" style="width:80%" onclick="login()">دخول الآن</button>
     </div>
 
-    <div id="page-home" class="page">
-        <div class="app-header">
-            <h2 style="margin:0">استكشف يا <span id="display-name">بطل</span> 🌟</h2>
+    <div id="homePage" class="page">
+        <div class="header">عالم عمر 🌟</div>
+        <p>أهلاً يا <span id="nameLabel">بطل</span>، اختر قسمك:</p>
+        
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            <button class="btn-cat bg-red" onclick="showSection('مغامرات')">🧭 مغامرات</button>
+            <button class="btn-cat bg-green" onclick="showSection('تعليمية')">🎓 تعليمية</button>
+            <button class="btn-cat bg-blue" onclick="showSection('أخلاقية')">✨ أخلاقية</button>
+            <button class="btn-cat bg-orange" onclick="showSection('تاريخية')">📜 تاريخية</button>
         </div>
 
-        <div class="nav-tabs">
-            <button class="tab-btn active" onclick="filter('adv')">🧭 مغامرات</button>
-            <button class="tab-btn" onclick="filter('edu')">🎓 تعليمية</button>
-            <button class="tab-btn" onclick="filter('mor')">✨ أخلاقية</button>
-            <button class="tab-btn" onclick="filter('his')">📜 تاريخية</button>
+        <div style="background:#fff3cd; padding:15px; border-radius:15px; margin:20px; border:1px dashed #856404;">
+            <strong>طريقة الدفع:</strong><br>
+            📱 كاش: 01063858006<br>
+            💸 انستاباي: kemolove
         </div>
+    </div>
 
-        <div class="grid" id="stories-grid">
+    <div id="sectionPage" class="page">
+        <button onclick="showPage('homePage')" style="float: right; padding: 10px; border-radius: 10px; border: none; background: #ddd;">رجوع ↩️</button>
+        <h2 id="sectionTitle">قسم القصص</h2>
+        <div id="storiesList">
             </div>
-
-        <div style="background:#eef2ff; padding:15px; border-radius:15px; margin-top:20px; text-align:center;">
-            <strong>طرق الدفع:</strong><br>
-            فودافون كاش: 01063858006 <br> انستاباي: kemolove
-        </div>
     </div>
 
-    <div id="page-admin" class="page">
-        <h2>لوحة التحكم الإدارية</h2>
-        <div class="admin-box">
-            <p>رفع ملف PDF جديد:</p>
-            <input type="file" id="fileInput">
-            <div class="progress-bar" id="pBar"><div class="progress-fill" id="pFill"></div></div>
-            <button onclick="uploadAction()" style="width:100%; padding:10px; background:#1cc88a; color:white; border:none; border-radius:10px; margin-top:10px;">بدء الرفع</button>
+    <div id="adminPage" class="page">
+        <h2>لوحة إدارة عمر ⚙️</h2>
+        <div class="story-card">
+            <p>رفع ملف PDF جديد</p>
+            <input type="file" id="pdfFile">
+            <button class="read-btn" onclick="fakeUpload()">بدء الرفع (إظهار شريط التحميل)</button>
+            <div id="progressCont" style="display:none; background:#eee; height:10px; border-radius:5px; margin-top:10px;">
+                <div id="progressBar" style="background:green; height:100%; width:0%; border-radius:5px;"></div>
+            </div>
         </div>
+        <button onclick="showPage('homePage')" class="read-btn" style="background:#777">خروج</button>
     </div>
 
-    <div class="bottom-nav" id="main-nav" style="display:none">
-        <div class="nav-link active" onclick="showPage('page-home', this)"><i class="fas fa-home"></i></div>
-        <div class="nav-link" onclick="handleAdmin(this)"><i class="fas fa-user-shield"></i></div>
+    <div id="navBar" class="nav-bar" style="display:none">
+        <div class="nav-item" onclick="showPage('homePage')">🏠 الرئيسية</div>
+        <div class="nav-item" onclick="openAdmin()">⚙️ الإدارة</div>
     </div>
 
     <script>
-        // بيانات القصص
-        const stories = [
-            {id:'adv', title:'عمر في الغابة', img:'https://img.freepik.com/free-vector/forest-landscape-with-various-trees_1308-54522.jpg'},
-            {id:'edu', title:'تعلم الأرقام', img:'https://img.freepik.com/free-vector/colorful-numbers-background_23-2148470123.jpg'},
-            {id:'mor', title:'الصدق منجاة', img:'https://img.freepik.com/free-vector/kids-reading-concept-illustration_114360-8457.jpg'}
-        ];
-
-        // تشغيل التطبيق
-        function startApp() {
-            let name = document.getElementById('user-input').value;
-            if(name) {
-                document.getElementById('display-name').innerText = name;
-                showPage('page-home');
-                document.getElementById('main-nav').style.display = 'flex';
-                renderStories('adv');
-            }
+        // 1. نظام الدخول
+        function login() {
+            let name = document.getElementById('userName').value;
+            if (name) {
+                document.getElementById('nameLabel').innerText = name;
+                showPage('homePage');
+                document.getElementById('navBar').style.display = 'flex';
+            } else { alert("من فضلك اكتب اسمك"); }
         }
 
-        // إظهار القصص حسب القسم
-        function filter(catId) {
-            renderStories(catId);
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function renderStories(catId) {
-            let grid = document.getElementById('stories-grid');
-            grid.innerHTML = '';
-            stories.filter(s => s.id === catId).forEach(s => {
-                grid.innerHTML += `<div class="card" onclick="alert('جاري فتح القصة...')">
-                    <img src="${s.img}">
-                    <h3>${s.title}</h3>
-                </div>`;
-            });
-        }
-
-        // نظام التنقل بين الصفحات
-        function showPage(pageId, navEl) {
+        // 2. نظام التنقل (شغال 100%)
+        function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            if(navEl) {
-                document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-                navEl.classList.add('active');
-            }
+            window.scrollTo(0,0);
         }
 
-        function handleAdmin(navEl) {
-            let pass = prompt("كلمة سر الإدارة:");
-            if(pass === "123") {
-                showPage('page-admin', navEl);
-            }
+        // 3. عرض القصص لكل قسم
+        function showSection(name) {
+            document.getElementById('sectionTitle').innerText = "قصص " + name;
+            let list = document.getElementById('storiesList');
+            // محاكاة إضافة قصص (عشان التطبيق ميبقاش فاضي)
+            list.innerHTML = `
+                <div class="story-card">
+                    <img src="https://picsum.photos/400/200?random=1">
+                    <h3>قصة ${name} الأولى</h3>
+                    <p>السعر: مجاني</p>
+                    <button class="read-btn" onclick="alert('جاري فتح القصة...')">اقرأ الآن (PDF)</button>
+                </div>
+            `;
+            showPage('sectionPage');
         }
 
-        function uploadAction() {
-            document.getElementById('pBar').style.display = 'block';
-            let fill = document.getElementById('pFill');
+        // 4. الإدارة
+        function openAdmin() {
+            let p = prompt("كلمة السر:");
+            if (p === "123") { showPage('adminPage'); } 
+            else { alert("خطأ في كلمة السر"); }
+        }
+
+        // 5. شريط التحميل
+        function fakeUpload() {
+            let bar = document.getElementById('progressBar');
+            document.getElementById('progressCont').style.display = 'block';
             let w = 0;
             let inter = setInterval(() => {
-                w += 10;
-                fill.style.width = w + '%';
-                if(w >= 100) { clearInterval(inter); alert("تم الرفع بنجاح!"); }
-            }, 200);
+                w += 5;
+                bar.style.width = w + '%';
+                if (w >= 100) { clearInterval(inter); alert("تم الرفع بنجاح!"); }
+            }, 100);
         }
     </script>
 </body>
