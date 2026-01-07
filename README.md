@@ -9,37 +9,30 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
-<body class="bg-blue-50">
-    <div class="max-w-md mx-auto bg-white min-h-screen shadow-2xl flex flex-col">
-        <header class="bg-blue-600 p-6 text-white text-center shadow-lg">
+<body class="bg-gray-100">
+    <div class="max-w-md mx-auto bg-white min-h-screen shadow-lg flex flex-col">
+        <header class="bg-blue-600 p-6 text-white text-center shadow-md">
             <h1 class="text-2xl font-bold">📚 تطبيق أنا عمر</h1>
-            <p id="userNameDisplay" class="text-xs mt-2 opacity-80"></p>
+            <p id="userName" class="text-sm mt-2 opacity-80"></p>
         </header>
 
         <div id="adminPanel" class="hidden p-4 bg-yellow-100 border-b-4 border-yellow-400">
-            <h2 class="font-bold text-red-600 mb-2">🛠 لوحة تحكم عمر</h2>
-            <input id="sTitle" type="text" placeholder="اسم القصة" class="w-full p-2 mb-2 border rounded">
+            <h2 class="font-bold text-blue-800 mb-3">🛠 لوحة تحكم الإدارة</h2>
+            <input id="sTitle" type="text" placeholder="عنوان القصة" class="w-full p-2 mb-2 border rounded">
             <input id="sPrice" type="number" placeholder="السعر" class="w-full p-2 mb-2 border rounded">
-            <button onclick="addStory()" class="bg-blue-600 text-white w-full py-2 rounded">إضافة قصة</button>
+            <button onclick="addStory()" class="w-full bg-blue-600 text-white py-2 rounded font-bold shadow">إضافة القصة</button>
         </div>
 
-        <main class="p-6 flex-grow">
-            <div id="loginSection" class="text-center py-10">
-                <h2 class="text-2xl font-bold mb-6">أهلاً بك في عالم المغامرة</h2>
-                <button onclick="login()" class="bg-red-500 text-white px-10 py-4 rounded-full font-bold shadow-xl">G دخول بجوجل</button>
+        <main class="p-4 flex-grow">
+            <div id="loginSection" class="text-center py-20 hidden">
+                <button onclick="login()" class="bg-red-500 text-white px-8 py-3 rounded-full font-bold shadow-lg">تسجيل الدخول بجوجل</button>
             </div>
-
-            <div id="storiesList" class="grid grid-cols-1 gap-4">
+            <div id="storiesList" class="space-y-4">
                 </div>
         </main>
-
-        <footer class="p-4 border-t text-center bg-gray-50">
-            <p class="text-sm">للتواصل: 01063858006</p>
-        </footer>
     </div>
 
     <script>
-        // بياناتك الخاصة التي أرسلتها
         const firebaseConfig = {
             apiKey: "AIzaSyBn-8ER3jyhEx6Fm4bM6uG9-fIoikHrT_c",
             authDomain: "ana-omar-b0e6c.firebaseapp.com",
@@ -52,31 +45,39 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-
-        // إيميلك للتحكم (تأكد إنه نفس إيميل الجميل بتاعك)
-        const myEmail = "kemoloveone1234@gmail.com"; 
+        const adminEmail = "kemoloveone1234@gmail.com";
 
         function login() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(err => alert("تأكد من تفعيل Google في Firebase"));
+            auth.signInWithPopup(provider);
         }
 
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('userNameDisplay').innerText = "أهلاً " + user.displayName;
-                if (user.email === myEmail) {
+                document.getElementById('userName').innerText = "أهلاً " + user.displayName;
+                if (user.email === adminEmail) {
                     document.getElementById('adminPanel').classList.remove('hidden');
                 }
                 loadStories();
+            } else {
+                document.getElementById('loginSection').classList.remove('hidden');
             }
         });
 
         function addStory() {
             const title = document.getElementById('sTitle').value;
             const price = document.getElementById('sPrice').value;
+            if(!title || !price) return alert("اكتب البيانات");
             db.collection("stories").add({ title, price, time: new Date() });
-            alert("تمت الإضافة!");
+            document.getElementById('sTitle').value = "";
+            document.getElementById('sPrice').value = "";
+        }
+
+        function deleteStory(id) {
+            if(confirm("هل تريد حذف هذه القصة؟")) {
+                db.collection("stories").doc(id).delete();
+            }
         }
 
         function loadStories() {
@@ -85,11 +86,15 @@
                 list.innerHTML = '';
                 snap.forEach(doc => {
                     const s = doc.data();
+                    const isAdmin = auth.currentUser.email === adminEmail;
                     list.innerHTML += `
-                        <div class="bg-white p-4 rounded-xl shadow border">
-                            <h3 class="font-bold">${s.title}</h3>
-                            <p class="text-blue-600">${s.price} جنيه</p>
-                            <button onclick="alert('تواصل مع عمر للدفع')" class="mt-2 text-xs bg-gray-100 p-1 rounded">شراء</button>
+                        <div class="bg-white p-4 rounded-xl shadow border relative">
+                            <h3 class="font-bold text-lg">${s.title}</h3>
+                            <p class="text-blue-600 font-bold">${s.price} جنيه</p>
+                            <div class="flex gap-2 mt-3">
+                                <a href="https://wa.me/201063858006?text=أريد شراء قصة: ${s.title}" class="flex-grow bg-green-500 text-white text-center py-1 rounded text-sm">طلب شراء</a>
+                                ${isAdmin ? `<button onclick="deleteStory('${doc.id}')" class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs">حذف</button>` : ''}
+                            </div>
                         </div>`;
                 });
             });
