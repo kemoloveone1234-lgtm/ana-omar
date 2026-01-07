@@ -1,127 +1,117 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8" />
-    <title>تطبيق أنا عمر</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <script type="module" crossorigin src="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/assets/index-pDdOUBjD.js"></script>
-    <link rel="stylesheet" crossorigin href="https://miaoda-op-sourcecode.s3.us-west-2.amazonaws.com/source_code/projects/conv-8qx7q7jy06ps_1767714188249/assets/index-DFK4dfQq.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أنا عمر - عالم القصص</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
     <style>
-        /* إخفاء لوحة التحكم تماماً */
-        #adminPanel {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            background: white;
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.2);
-            width: 90%;
-            max-width: 350px;
-        }
-        
-        .story-layer {
-            position: relative;
-            z-index: 10;
-            margin-top: -20px;
-            padding: 15px;
-        }
-
-        .clean-card {
-            background: white;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-        }
-
-        /* الطبقة الشفافة التي تغلق اللوحة */
-        #overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-        }
+        body { background-color: #f0f9ff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .story-card { background: white; border-radius: 15px; padding: 15px; margin-bottom: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; }
+        .story-card:hover { transform: translateY(-3px); }
+        #adminPanel { display: none; background: #fff; border: 2px solid #3b82f6; border-radius: 15px; padding: 15px; margin-bottom: 20px; }
+        .header-bg { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 20px; border-radius: 0 0 25px 25px; text-align: center; }
     </style>
 </head>
 <body>
-    <div id="root" onclick="checkAdminClick()"></div>
 
-    <div id="overlay" onclick="closeAdmin()"></div>
-
-    <div id="adminPanel">
-        <h3 class="text-center font-bold mb-4">لوحة الإضافة السرية</h3>
-        <input id="sTitle" type="text" placeholder="اسم القصة" class="w-full p-2 mb-2 border rounded">
-        <input id="sPrice" type="number" placeholder="السعر" class="w-full p-2 mb-4 border rounded">
-        <button onclick="addStory()" class="w-full bg-blue-600 text-white py-2 rounded mb-2">حفظ القصة</button>
-        <button onclick="closeAdmin()" class="w-full text-gray-400 text-sm">إغلاق</button>
+    <div class="header-bg mb-6">
+        <h1 class="text-2xl font-bold">مرحباً بك في عالم عمر</h1>
+        <p class="text-sm opacity-90">استمتع بأجمل القصص الأخلاقية والتربوية</p>
     </div>
 
-    <div class="story-layer max-w-md mx-auto" id="storiesList">
+    <div class="container mx-auto px-4 pb-20">
+        
+        <div id="adminPanel">
+            <h3 class="font-bold mb-3 text-blue-600 text-center">إضافة قصة جديدة (خاص بعمر)</h3>
+            <input type="text" id="storyTitle" placeholder="عنوان القصة" class="w-full border p-2 rounded mb-2 text-sm">
+            <input type="number" id="storyPrice" placeholder="السعر (جنيه)" class="w-full border p-2 rounded mb-2 text-sm">
+            <button onclick="addStory()" class="w-full bg-blue-600 text-white py-2 rounded font-bold">حفظ ونشر القصة</button>
         </div>
 
+        <div id="storiesList" class="space-y-4">
+            <p class="text-center text-gray-500">جاري تحميل القصص الجميلة...</p>
+        </div>
+    </div>
+
     <script>
+        // 1. إعدادات Firebase (ضع إعداداتك هنا)
         const firebaseConfig = {
-            apiKey: "AIzaSyBn-8ER3jyhEx6Fm4bM6uG9-fIoikHrT_c",
-            authDomain: "ana-omar-b0e6c.firebaseapp.com",
-            projectId: "ana-omar-b0e6c",
-            storageBucket: "ana-omar-b0e6c.firebasestorage.app",
-            messagingSenderId: "781802661336",
-            appId: "1:781802661336:web:25736ef0b6b27f15167ead"
+            apiKey: "AIzaSy...", 
+            authDomain: "ana-omar-app.firebaseapp.com",
+            projectId: "ana-omar-app",
+            storageBucket: "ana-omar-app.appspot.com",
+            messagingSenderId: "...",
+            appId: "..."
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // طريقة فتح اللوحة: اضغط 5 مرات متتالية بسرعة على الشاشة
+        // 2. نظام اللوحة السرية (5 ضغطات)
         let clickCount = 0;
-        function checkAdminClick() {
+        document.querySelector('.header-bg').onclick = function() {
             clickCount++;
             if (clickCount === 5) {
                 document.getElementById('adminPanel').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-                clickCount = 0;
+                alert('مرحباً عمر! تم فتح لوحة التحكم');
             }
-            setTimeout(() => { clickCount = 0; }, 2000);
-        }
+        };
 
-        function closeAdmin() {
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        function addStory() {
-            const title = document.getElementById('sTitle').value;
-            const price = document.getElementById('sPrice').value;
-            if(!title || !price) return;
-            db.collection("stories").add({ title, price, time: Date.now() });
-            closeAdmin();
-            document.getElementById('sTitle').value = "";
-            document.getElementById('sPrice').value = "";
-        }
-
+        // 3. تحميل القصص من قاعدة البيانات
         function loadStories() {
             db.collection("stories").orderBy("time", "desc").onSnapshot(snap => {
                 const list = document.getElementById('storiesList');
                 list.innerHTML = '';
+                if (snap.empty) {
+                    list.innerHTML = '<p class="text-center">لا توجد قصص حالياً. انتظر جديد عمر!</p>';
+                }
                 snap.forEach(doc => {
                     const s = doc.data();
                     list.innerHTML += `
-                        <div class="clean-card">
-                            <div class="flex justify-between items-center">
-                                <div>
-                                    <h4 class="font-bold text-gray-800">${s.title}</h4>
-                                    <span class="text-blue-600 font-bold text-xs">${s.price} جنيه</span>
-                                </div>
-                                <a href="
+                        <div class="story-card flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-gray-800">${s.title}</h4>
+                                <span class="text-blue-600 font-bold text-sm">${s.price} جنيه</span>
+                            </div>
+                            <button onclick="payWhatsApp('${s.title}', '${s.price}')" 
+                                class="bg-green-500 text-white px-5 py-2 rounded-full text-xs font-bold shadow-md">
+                                شراء الآن
+                            </button>
+                        </div>`;
+                });
+            });
+        }
+
+        // 4. إضافة قصة جديدة
+        function addStory() {
+            const title = document.getElementById('storyTitle').value;
+            const price = document.getElementById('storyPrice').value;
+            if(title && price) {
+                db.collection("stories").add({
+                    title: title,
+                    price: price,
+                    time: Date.now()
+                }).then(() => {
+                    alert('تمت الإضافة بنجاح!');
+                    document.getElementById('storyTitle').value = '';
+                    document.getElementById('storyPrice').value = '';
+                    document.getElementById('adminPanel').style.display = 'none';
+                    clickCount = 0;
+                });
+            }
+        }
+
+        // 5. نظام الدفع عبر الواتساب
+        function payWhatsApp(title, price) {
+            const myNumber = "201063858006"; // رقمك
+            const message = `أهلاً عمر، أريد شراء قصة: ${title}\nالسعر: ${price} جنيه\n\nطرق الدفع:\n- فودافون كاش: 01063858006\n- انستا باي: omar@instapay`;
+            window.location.href = `https://wa.me/${myNumber}?text=${encodeURIComponent(message)}`;
+        }
+
+        // تشغيل التحميل عند فتح التطبيق
+        loadStories();
+    </script>
+</body>
+</html>
