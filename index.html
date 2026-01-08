@@ -3,161 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>أنا عمر - عالم القصص</title>
+    <title>أنا عمر - الإصدار الذهبي</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --main-color: #6C5CE7; --accent-color: #00CEC9; --bg-color: #F9FBFF; }
-        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        body { background-color: var(--bg-color); margin: 0; padding: 0; }
+        :root { --primary: #2196F3; --secondary: #4CAF50; --accent: #FF9800; --bg: #FDFDFD; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Noto Sans Arabic', sans-serif; }
+        body { background-color: var(--bg); margin: 0; padding: 0; overflow-x: hidden; }
 
-        /* الهيدر بأسلوب تطبيق هينتا */
-        .header-henta {
-            width: 100%; height: 220px;
-            background: url('https://img.freepik.com/free-photo/3d-cartoon-boy-reading-book_23-2150981898.jpg') no-repeat center center;
-            background-size: cover; border-radius: 0 0 50px 50px;
-            position: relative; display: flex; align-items: center; justify-content: center;
-        }
-        .header-henta::after {
-            content: ""; position: absolute; bottom: 0; width: 100%; height: 100%;
-            background: linear-gradient(transparent, rgba(108, 92, 231, 0.8));
-            border-radius: 0 0 50px 50px;
-        }
-        .header-henta h1 { color: white; z-index: 1; margin: 0; font-size: 32px; font-weight: 900; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
-
-        .content { padding: 20px; max-width: 500px; margin: auto; }
-
-        /* كرت القصة بأسلوب هينتا */
-        .henta-card {
-            background: white; border-radius: 35px; overflow: hidden;
-            margin-bottom: 25px; box-shadow: 0 15px 35px rgba(108, 92, 231, 0.1);
-            border: 2px solid white; transition: 0.3s;
-        }
-        .henta-card:active { transform: scale(0.95); }
-        
-        .henta-img-box { width: 100%; height: 200px; overflow: hidden; }
-        .henta-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .henta-info { padding: 20px; text-align: center; }
-        .henta-info h3 { margin: 0 0 15px; font-size: 20px; color: #2D3436; }
-        
-        .btn-play {
-            background: var(--main-color); color: white; border: none;
-            padding: 12px 40px; border-radius: 20px; font-size: 18px;
-            font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        /* الغلاف الاحترافي */
+        .app-bar {
+            width: 100%; height: 260px;
+            background: linear-gradient(135deg, #FF5722, #FF9800);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border-radius: 0 0 50px 50px; color: white; box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
-        /* صفحة القارئ */
+        .container { padding: 20px; max-width: 600px; margin: auto; }
+        .category-title { font-size: 22px; font-weight: 900; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px; border-right: 5px solid; padding-right: 10px; }
+
+        .story-card {
+            background: white; border-radius: 30px; overflow: hidden;
+            margin-bottom: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border: 1px solid #eee; transition: 0.3s;
+        }
+        .story-card:active { transform: scale(0.96); }
+        .card-img { width: 100%; height: 210px; object-fit: cover; background: #f0f0f0; }
+        .card-content { padding: 20px; text-align: center; }
+
+        .btn-main {
+            background: var(--primary); color: white; border: none; padding: 14px 40px;
+            border-radius: 50px; font-size: 20px; font-weight: 700; cursor: pointer; width: 100%;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+        }
+
+        /* صفحة القراءة */
         .page { display: none; }
-        .active { display: block; }
+        .active { display: block; animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .nav-back { padding: 15px; display: flex; align-items: center; gap: 15px; background: white; position: sticky; top: 0; z-index: 10; }
-        .nav-back i { font-size: 25px; color: var(--main-color); }
+        .reader-header { padding: 15px; background: white; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid #eee; }
+        .story-text { padding: 30px; font-size: 24px; line-height: 2; text-align: justify; color: #333; white-space: pre-line; }
 
-        .story-body { padding: 30px; font-size: 22px; line-height: 2.2; text-align: justify; color: #2D3436; background: white; }
-
-        .rating-section {
-            padding: 30px; text-align: center; background: #EEF2FF; margin: 20px; border-radius: 40px;
+        /* التحكم الصوتي */
+        .audio-bar { display: flex; justify-content: center; padding: 20px; background: #fff; }
+        .btn-audio {
+            background: var(--primary); color: white; border: none; width: 70px; height: 70px;
+            border-radius: 50%; font-size: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
         }
-        .stars { margin: 15px 0; font-size: 35px; color: #DFE6E9; }
-        .stars i.active { color: #FDCB6E; }
+        .btn-audio.playing { background: #f44336; box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4); }
     </style>
 </head>
 <body>
 
 <div id="home" class="page active">
-    <div class="header-henta">
-        <h1>أهلاً يا عمر</h1>
+    <div class="app-bar">
+        <i class="fas fa-crown" style="font-size: 60px; margin-bottom: 10px;"></i>
+        <h1 style="margin:0; letter-spacing: 2px;">أنا عمر</h1>
+        <p>مغامراتي اليومية الممتعة</p>
     </div>
-    <div class="content" id="list"></div>
+
+    <div class="container">
+        <div class="category-title" style="color: var(--secondary); border-color: var(--secondary);"><i class="fas fa-pencil-alt"></i> تعليم</div>
+        <div class="story-card">
+            <img src="https://img.freepik.com/free-vector/cute-boy-reading-book-cartoon-vector-icon-illustration-people-education-icon-concept-isolated_138676-2107.jpg" class="card-img">
+            <div class="card-content">
+                <h3>عمر وسر الحروف الضائعة</h3>
+                <button class="btn-main" style="background:var(--secondary);" onclick="openStory('edu')">اقرأ الآن</button>
+            </div>
+        </div>
+
+        <div class="category-title" style="color: var(--accent); border-color: var(--accent);"><i class="fas fa-rocket"></i> مغامرة</div>
+        <div class="story-card">
+            <img src="https://img.freepik.com/free-vector/cute-astronaut-flying-with-rocket-cartoon-vector-icon-illustration-science-technology-icon-concept_138676-2122.jpg" class="card-img">
+            <div class="card-content">
+                <h3>عمر ورحلة الكواكب</h3>
+                <button class="btn-main" style="background:var(--accent);" onclick="openStory('adv')">انطلق</button>
+            </div>
+        </div>
+
+        <div class="category-title" style="color: #9C27B0; border-color: #9C27B0;"><i class="fas fa-users"></i> صداقة</div>
+        <div class="story-card">
+            <img src="https://img.freepik.com/free-vector/cute-friends-hanging-out_23-2147651044.jpg" class="card-img">
+            <div class="card-content">
+                <h3>عمر وصديقه الروبوت</h3>
+                <button class="btn-main" style="background:#9C27B0;" onclick="openStory('friend')">اكتشف القصة</button>
+            </div>
+        </div>
+
+        <div class="category-title" style="color: #00BCD4; border-color: #00BCD4;"><i class="fas fa-soap"></i> عادات صحية</div>
+        <div class="story-card">
+            <img src="https://img.freepik.com/free-vector/boy-washing-hands-cartoon-vector-illustration-hygiene-concept_138676-2041.jpg" class="card-img">
+            <div class="card-content">
+                <h3>عمر وبطل النظافة</h3>
+                <button class="btn-main" style="background:#00BCD4;" onclick="openStory('health')">اقرأ وتعلم</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="reader" class="page">
-    <div class="nav-back" onclick="goBack()">
-        <i class="fas fa-chevron-right"></i>
-        <h2 id="story-title" style="margin:0; font-size: 18px;">العودة</h2>
+    <div class="reader-header">
+        <i class="fas fa-arrow-right" onclick="closeStory()" style="font-size: 28px; cursor: pointer; color: #FF5722;"></i>
+        <h3 id="st-title" style="flex:1; text-align:center; margin:0; font-size:18px;"></h3>
     </div>
-    <img id="story-img" src="" style="width: 100%; height: 280px; object-fit: cover;">
-    <div id="story-text" class="story-body"></div>
     
-    <div class="rating-section">
-        <h3>هل أعجبتك القصة؟</h3>
-        <div class="stars">
-            <i class="fas fa-star" onclick="rate(1)"></i>
-            <i class="fas fa-star" onclick="rate(2)"></i>
-            <i class="fas fa-star" onclick="rate(3)"></i>
-            <i class="fas fa-star" onclick="rate(4)"></i>
-            <i class="fas fa-star" onclick="rate(5)"></i>
-        </div>
-        <button class="btn-play" onclick="goBack()" style="margin-top:20px; background: #636E72;">الرئيسية</button>
+    <img id="st-img" src="" style="width:100%; height:260px; object-fit:cover;">
+    
+    <div class="audio-bar">
+        <button id="speak-btn" class="btn-audio" onclick="toggleSpeech()"><i id="audio-icon" class="fas fa-play"></i></button>
     </div>
+
+    <div id="st-text" class="story-text"></div>
 </div>
 
 <script>
-    const data = [
-        {
-            id: 1,
-            t: 'عمر وسر الحروف الضائعة',
-            i: 'https://img.freepik.com/free-photo/view-3d-boy-reading-book_23-2150790856.jpg',
-            c: `في صباح يوم مشرق وجميل، استيقظ عمر وهو متحمس جداً لقراءة كتابه الجديد. لكنه عندما فتح الصفحة الأولى، صدم بشيء غريب.. لقد اختفت الحروف تماماً من الورق!
+    const stories = {
+        'edu': { t: 'عمر وسر الحروف الضائعة', i: 'https://img.freepik.com/free-vector/cute-boy-reading-book-cartoon-vector-icon-illustration-people-education-icon-concept-isolated_138676-2107.jpg', c: 'في صباح يوم مشرق، استيقظ عمر ليجد شيئاً غريباً جداً.. لقد اختفت الحروف من كتابه المفضل! بدأ عمر بالبحث في كل مكان، تحت السرير وفي صندوق الألعاب، حتى سمع صوتاً ضاحكاً. قالت الحروف: نحن هنا يا عمر، أردنا أن نلعب معك! ضحك عمر وأمسك قلمه وبدأ يكتب الحروف واحداً تلو الآخر.' },
+        'adv': { t: 'عمر ورحلة الكواكب', i: 'https://img.freepik.com/free-vector/cute-astronaut-flying-with-rocket-cartoon-vector-icon-illustration-science-technology-icon-concept_138676-2122.jpg', c: 'قرر عمر أن يصبح رائد فضاء شجاع. صنع صاروخاً من الكرتون، وبمجرد أن أغمض عينيه، طار الصاروخ عالياً! زار عمر كوكب السكاكر، ثم طار إلى كوكب الألعاب. شاهد عمر الأرض من بعيد وقال: سبحان الله، ما أجمل هذا الكون!' },
+        'friend': { t: 'عمر وصديقه الروبوت', i: 'https://img.freepik.com/free-vector/cute-friends-hanging-out_23-2147651044.jpg', c: 'في يوم من الأيام، وجد عمر صندوقاً كبيراً أمام منزله. فتحه ليجد روبوتاً صغيراً يحتاج إلى مساعدة. أصلحه عمر وأطلق عليه اسم "زيزو". صار زيزو يساعد عمر في ترتيب غرفته ويحكي له قصصاً عن كواكب بعيدة. تعلم عمر أن الصداقة يمكن أن تكون بين أي شخصين، حتى لو كان أحدهما آلياً!' },
+        'health': { t: 'عمر وبطل النظافة', i: 'https://img.freepik.com/free-vector/boy-washing-hands-cartoon-vector-illustration-hygiene-concept_138676-2041.jpg', c: 'كان عمر يحب اللعب في الطين، لكنه كان ينسى غسل يديه. في يوم ما، أخبرته المعلمة عن "جيش الجراثيم" الذي يختبئ في الأيدي غير النظيفة. قرر عمر أن يكون "بطل النظافة"، فصار يغسل يديه بالماء والصابون جيداً قبل الأكل. شعر عمر بنشاط أكبر وعلم أن النظافة تحميه وتجعله قوياً.' }
+    };
 
-لم يستسلم عمر، بل أحضر عدسته المكبرة وبدأ يبحث في غرفته. بحث تحت السرير، وخلف الستارة، وحتى في علبة ألوانه. وفجأة، سمع صوتاً ضاحكاً يأتي من خلف المكتبة الخشبية الكبيرة.
+    let speech = window.speechSynthesis;
+    let utter = null;
 
-كانت الحروف تختبئ هناك وهي تهمس: "لقد أردنا أن نلعب معك يا عمر! هل يمكنك أن تجمعنا لنكون كلمات مفيدة؟". ضحك عمر وقال: "طبعاً يا أصدقائي!".
-
-بدأ عمر يمسك حرف "الألف" ويضعه بجانب حرف "اللام"، ثم حرف "السين" لتصبح كلمة (الصدق). وهكذا، قضى عمر يومه في ترتيب الحروف حتى امتلأ الكتاب بالحكايات الرائعة مرة أخرى.`
-        },
-        {
-            id: 2,
-            t: 'عمر ورحلة الفضاء العجيبة',
-            i: 'https://img.freepik.com/free-photo/view-3d-astronaut-boy_23-2150710041.jpg',
-            c: `كان عمر يحلم دائماً بأن يلمس النجوم البعيدة. في أحد الأيام، قرر أن يصنع صاروخه الخاص من صناديق الكرتون الكبيرة وألوان الرسم اللامعة التي تشبه ضوء القمر.
-
-بمجرد أن جلس عمر داخل صاروخه وأغمض عينيه، شعر باهتزاز قوي.. وفجأة! انطلق الصاروخ في الفضاء الواسع. شاهد عمر الأرض من بعيد وهي تبدو مثل كرة زرقاء صغيرة وجميلة تسبح في الظلام.
-
-وصل عمر إلى كوكب السكاكر، حيث الجبال مصنوعة من الشوكولاتة اللذيذة والأشجار من غزل البنات الوردي. ثم طار إلى كوكب الألعاب حيث الروبوتات تلعب كرة القدم بمرح.`
-        }
-    ];
-
-    function render() {
-        const list = document.getElementById('list');
-        list.innerHTML = '';
-        data.forEach(s => {
-            list.innerHTML += `
-                <div class="henta-card" onclick="openS(${s.id})">
-                    <div class="henta-img-box"><img src="${s.i}"></div>
-                    <div class="henta-info">
-                        <h3>${s.t}</h3>
-                        <button class="btn-play">قراءة الآن</button>
-                    </div>
-                </div>`;
-        });
-    }
-
-    function openS(id) {
-        const s = data.find(x => x.id === id);
-        document.getElementById('story-title').innerText = s.t;
-        document.getElementById('story-img').src = s.i;
-        document.getElementById('story-text').innerText = s.c;
+    function openStory(id) {
+        const s = stories[id];
+        document.getElementById('st-title').innerText = s.t;
+        document.getElementById('st-img').src = s.i;
+        document.getElementById('st-text').innerText = s.c;
         document.getElementById('home').style.display = 'none';
         document.getElementById('reader').style.display = 'block';
         window.scrollTo(0,0);
     }
 
-    function goBack() {
+    function closeStory() {
+        stopSpeech();
         document.getElementById('reader').style.display = 'none';
         document.getElementById('home').style.display = 'block';
     }
 
-    function rate(n) {
-        const stars = document.querySelectorAll('.stars i');
-        stars.forEach((s, i) => s.classList.toggle('active', i < n));
+    function toggleSpeech() {
+        if (speech.speaking) {
+            stopSpeech();
+        } else {
+            utter = new SpeechSynthesisUtterance(document.getElementById('st-text').innerText);
+            utter.lang = 'ar-SA';
+            utter.onend = () => stopSpeech();
+            speech.speak(utter);
+            document.getElementById('audio-icon').className = 'fas fa-stop';
+            document.getElementById('speak-btn').classList.add('playing');
+        }
     }
 
-    render();
+    function stopSpeech() {
+        speech.cancel();
+        document.getElementById('audio-icon').className = 'fas fa-play';
+        document.getElementById('speak-btn').classList.remove('playing');
+    }
 </script>
 
 </body>
