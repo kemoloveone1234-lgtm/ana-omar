@@ -3,58 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ana-Omar | عالم القصص المجانية</title>
+    <title>Ana-Omar | عالم القصص</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root { 
-            --primary: #4CAF50; --adventure: #FF9800; --purpose: #2196F3; 
-            --admin: #636e72; --bg: #F9FBFF; --text: #2D3436; 
+            --primary-green: #4CAF50; 
+            --adventure-orange: #FF9800; 
+            --purpose-blue: #2196F3; 
+            --admin-gray: #636e72; 
+            --bg-color: #F9FBFF; 
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg); margin: 0; padding: 0; font-family: 'Noto Sans Arabic', sans-serif; color: var(--text); }
+        body { background-color: var(--bg-color); margin: 0; padding: 0; font-family: 'Noto Sans Arabic', sans-serif; overflow-x: hidden; }
 
-        /* الهيدر */
+        /* الهيدر العلوي كما في الصورة المرفقة */
         .app-header {
-            width: 100%; height: 250px;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1000&auto=format&fit=crop') no-repeat center center;
-            background-size: cover; border-radius: 0 0 50px 50px;
+            width: 100%; height: 350px;
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://i.imgur.com/KzXG8gR.png') no-repeat center center;
+            background-size: cover; border-radius: 0 0 80px 80px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: white; text-align: center;
+            color: white; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-        .app-header h1 { font-family: 'Cairo'; font-size: 35px; margin: 0; }
+        .app-header h1 { font-family: 'Cairo'; font-size: 48px; margin: 0; }
+        .app-header p { font-size: 18px; margin-top: 10px; font-weight: bold; }
 
-        /* الأزرار الرئيسية */
-        .main-nav { padding: 30px 20px; display: grid; gap: 12px; max-width: 500px; margin: auto; }
-        .nav-btn {
-            padding: 18px; border: none; border-radius: 20px; color: white;
-            font-family: 'Cairo'; font-size: 18px; font-weight: bold;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            cursor: pointer; transition: 0.3s;
-        }
-        .btn-edu { background: var(--primary); }
-        .btn-adv { background: var(--adventure); }
-        .btn-pur { background: var(--purpose); }
-        .btn-adm { background: var(--admin); }
-
-        /* الأقسام */
-        .section { display: none; padding: 15px; max-width: 600px; margin: auto; }
-        .section.active { display: block; animation: fadeIn 0.4s; }
-
-        /* عرض القصص السينمائي */
-        .story-item { margin-bottom: 40px; text-align: center; background: white; border-radius: 30px; overflow: hidden; padding-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .story-item img { width: 100%; height: 280px; object-fit: cover; }
-        .story-item h3 { font-family: 'Cairo'; margin: 15px 0; font-size: 22px; }
+        /* حاوية الأزرار - نفس ألوان الصورة */
+        .main-nav { padding: 30px 20px; display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: auto; }
         
-        /* القراءة */
-        .read-btn { background: var(--primary); color: white; border: none; padding: 10px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+        .nav-btn {
+            width: 100%; padding: 20px; border: none; border-radius: 25px; color: white;
+            font-family: 'Cairo'; font-size: 22px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; gap: 15px;
+            cursor: pointer; transition: 0.2s; box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
 
-        footer { text-align: center; padding: 30px; color: #777; font-size: 13px; border-top: 1px solid #eee; margin-top: 20px; }
+        .nav-btn:active { transform: scale(0.97); opacity: 0.9; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* الألوان مطابقة للصورة تماماً */
+        .btn-edu { background: var(--primary-green); } /* أخضر */
+        .btn-adv { background: var(--adventure-orange); } /* برتقالي */
+        .btn-pur { background: var(--purpose-blue); } /* أزرق */
+        .btn-adm { background: var(--admin-gray); } /* رمادي */
+
+        /* الأقسام (تظهر وتختفي عند الضغط) */
+        .section { display: none; padding: 20px; max-width: 600px; margin: auto; min-height: 100vh; }
+        .section.active { display: block; animation: fadeIn 0.3s ease-in; }
+
+        /* تصميم القصة بالداخل */
+        .story-display { margin-top: 20px; text-align: center; background: white; border-radius: 30px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .story-display img { width: 100%; border-radius: 20px; margin-bottom: 15px; }
+
+        .back-btn { background: #eee; border: none; padding: 10px 20px; border-radius: 15px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -66,46 +71,85 @@
     </div>
 
     <div class="main-nav">
-        <button class="nav-btn btn-edu" onclick="showSection('edu')"><i class="fas fa-book-reader"></i> قصص تعليمية</button>
-        <button class="nav-btn btn-adv" onclick="showSection('adv')"><i class="fas fa-rocket"></i> قصص مغامرات</button>
-        <button class="nav-btn btn-pur" onclick="showSection('pur')"><i class="fas fa-star"></i> قصص هادفة</button>
-        <button class="nav-btn btn-adm" onclick="showSection('settings')"><i class="fas fa-tools"></i> لوحة التحكم</button>
+        <button class="nav-btn btn-edu" onclick="showSection('edu')">
+            قصص تعليمية <i class="fas fa-graduation-cap"></i>
+        </button>
+        
+        <button class="nav-btn btn-adv" onclick="showSection('adv')">
+            قصص مغامرات <i class="fas fa-rocket"></i>
+        </button>
+        
+        <button class="nav-btn btn-pur" onclick="showSection('pur')">
+            قصص هادفة <i class="fas fa-star"></i>
+        </button>
+        
+        <button class="nav-btn btn-adm" onclick="showSection('settings')">
+            لوحة التحكم <i class="fas fa-tools"></i>
+        </button>
     </div>
 </div>
 
 <div id="edu" class="section">
-    <button onclick="goHome()" class="nav-btn" style="background:#636e72; padding:8px 20px; margin-bottom:15px;">العودة</button>
-    <div id="edu-list"></div>
+    <button onclick="goHome()" class="back-btn">← العودة</button>
+    <h2 style="text-align:center; font-family:'Cairo'; color:var(--primary-green);">القصص التعليمية</h2>
+    <div class="story-display">
+        <img src="https://i.imgur.com/KzXG8gR.png" alt="قصة تعليمية">
+        <h3>عمر والسلحفاة الحكيمة</h3>
+        <p>هنا تظهر محتويات القصص التعليمية...</p>
+    </div>
 </div>
 
 <div id="adv" class="section">
-    <button onclick="goHome()" class="nav-btn" style="background:#636e72; padding:8px 20px; margin-bottom:15px;">العودة</button>
-    <div id="adv-list"></div>
+    <button onclick="goHome()" class="back-btn">← العودة</button>
+    <h2 style="text-align:center; font-family:'Cairo'; color:var(--adventure-orange);">قصص المغامرات</h2>
+    <div class="story-display">
+        <img src="https://i.imgur.com/KzXG8gR.png" alt="مغامرات">
+        <h3>رحلة في الغابة</h3>
+        <p>مغامرات مشوقة مع عمر...</p>
+    </div>
 </div>
 
 <div id="pur" class="section">
-    <button onclick="goHome()" class="nav-btn" style="background:#636e72; padding:8px 20px; margin-bottom:15px;">العودة</button>
-    <div id="pur-list"></div>
+    <button onclick="goHome()" class="back-btn">← العودة</button>
+    <h2 style="text-align:center; font-family:'Cairo'; color:var(--purpose-blue);">قصص هادفة</h2>
+    <div class="story-display">
+        <img src="https://i.imgur.com/KzXG8gR.png" alt="قصص هادفة">
+        <h3>الأمانة والصدق</h3>
+        <p>تعلم القيم الأخلاقية مع عمر...</p>
+    </div>
 </div>
 
 <div id="settings" class="section">
-    <button onclick="goHome()" class="nav-btn" style="background:#636e72; padding:8px 20px; margin-bottom:15px;">العودة</button>
-    <h3>إضافة قصة جديدة</h3>
-    <input type="text" id="s-title" placeholder="عنوان القصة" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
-    <select id="s-type" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
-        <option value="edu">تعليمية</option>
-        <option value="adv">مغامرات</option>
-        <option value="pur">هادفة</option>
-    </select>
-    <button class="nav-btn btn-edu" style="width:100%" onclick="addStory()">حفظ في القائمة المجانية</button>
-    <p style="font-size:12px; color:gray; text-align:center; margin-top:20px;">للدعم الفني: فودافون كاش 01063858006</p>
+    <button onclick="goHome()" class="back-btn">← العودة</button>
+    <h2 style="text-align:center; font-family:'Cairo'; color:var(--admin-gray);">لوحة التحكم</h2>
+    <p style="text-align:center;">إعدادات إضافة وحذف القصص...</p>
 </div>
 
-<footer>
-    جميع الحقوق محفوظة للمؤلف محمد فتحي @2026
-</footer>
-
 <script>
-    // تم استخدام روابط صور ثابتة وعالمية لضمان عملها
-    let stories = [
-        { id: 1, title: "عمر وال
+    // الوظيفة المسؤولة عن تشغيل الأزرار وفتح الأقسام
+    function showSection(id) {
+        // إخفاء الصفحة الرئيسية
+        document.getElementById('home-view').style.display = 'none';
+        // إخفاء كافة الأقسام المفتوحة مسبقاً
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(s => s.classList.remove('active'));
+        // إظهار القسم الذي تم الضغط عليه
+        const target = document.getElementById(id);
+        target.classList.add('active');
+        // الصعود لأعلى الصفحة
+        window.scrollTo(0, 0);
+    }
+
+    // الوظيفة المسؤولة عن زر العودة للرئيسية
+    function goHome() {
+        // إخفاء الأقسام
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(s => s.classList.remove('active'));
+        // إظهار الصفحة الرئيسية
+        document.getElementById('home-view').style.display = 'block';
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
