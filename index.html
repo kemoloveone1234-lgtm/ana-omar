@@ -1,115 +1,262 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<title>ana-omar | قصص الأطفال</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{margin:0;font-family:Tahoma;background:#fff7e6;direction:rtl}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ana-omar | عالم قصص الأطفال</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-/* Splash */
-#splash{
-position:fixed;inset:0;
-background:#ff9800;color:#fff;
-display:flex;align-items:center;justify-content:center;
-font-size:26px;font-weight:bold;
-z-index:999;
-}
+    <style>
+        :root {
+            --primary: #ff9800;
+            --secondary: #4CAF50;
+            --bg: #fff7e6;
+            --text: #333;
+        }
 
-/* Login */
-.center{max-width:360px;margin:80px auto;background:#fff;padding:15px;border-radius:8px;display:none;}
-input,textarea,select{width:100%;margin:6px 0;padding:7px}
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Noto Sans Arabic', sans-serif; background: var(--bg); color: var(--text); direction: rtl; overflow-x: hidden; }
 
-/* App */
-header{background:#ff9800;color:#fff;text-align:center;padding:12px;font-size:20px}
-nav{display:flex;justify-content:space-around;background:#ffe0b2;padding:8px}
-nav button{font-size:14px;padding:6px 10px;border:none;background:#ff9800;color:#fff;border-radius:4px}
-section{display:none;padding:15px}
-section.active{display:block}
-.story{background:#fff;padding:10px;margin-bottom:10px;border-radius:6px}
-.story img{max-width:100%;border-radius:6px}
-.small-btn{font-size:12px;padding:4px 6px;margin:2px}
-.star{font-size:18px;cursor:pointer;color:#ccc}
-.star.active{color:#ff9800}
-footer{text-align:center;font-size:13px;color:#666;margin:20px 0}
-</style>
+        /* شاشة الترحيب Splash Screen */
+        #splash {
+            position: fixed; inset: 0; background: var(--primary);
+            color: #fff; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 9999;
+            transition: opacity 0.8s ease;
+        }
+        #splash h1 { font-family: 'Cairo'; font-size: 35px; margin-bottom: 10px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* شاشة تسجيل الحساب */
+        .auth-container {
+            max-width: 400px; margin: 60px auto; padding: 30px;
+            background: #fff; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: none; animation: fadeIn 0.5s;
+        }
+        .auth-container h3 { font-family: 'Cairo'; color: var(--primary); text-align: center; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 12px; border: 1px solid #ddd; font-family: inherit; }
+        .main-btn { width: 100%; padding: 15px; border: none; background: var(--primary); color: #fff; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; }
+
+        /* التطبيق الرئيسي */
+        header { background: var(--primary); color: #fff; padding: 20px; text-align: center; border-radius: 0 0 40px 40px; }
+        nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 15px; max-width: 600px; margin: auto; }
+        nav button { padding: 10px 5px; border: none; background: #fff; color: var(--primary); border-radius: 15px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+        nav button.active { background: var(--primary); color: #fff; }
+
+        /* الأقسام والقصص */
+        section { display: none; padding: 20px; max-width: 700px; margin: auto; }
+        section.active { display: block; }
+        
+        .story-card { background: #fff; border-radius: 25px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 8px 15px rgba(0,0,0,0.05); }
+        .story-card img { width: 100%; height: 250px; object-fit: cover; }
+        .story-card-content { padding: 20px; text-align: center; }
+        
+        .stars { color: #ccc; margin: 10px 0; cursor: pointer; }
+        .stars .active { color: var(--primary); }
+
+        .btn-read { background: var(--secondary); color: #fff; border: none; padding: 10px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; }
+        
+        footer { text-align: center; padding: 30px; color: #888; font-size: 13px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
 </head>
 <body>
 
 <!-- Splash Screen -->
-<div id="splash">✨ مرحبًا بكم – أنا عمر ✨</div>
-
-<!-- Login -->
-<div id="login" class="center">
-<h3>إنشاء حساب</h3>
-<input id="name" placeholder="الاسم">
-<input id="email" type="email" placeholder="البريد الإلكتروني">
-<input id="pass" type="password" placeholder="كلمة السر">
-<input id="pass2" type="password" placeholder="تأكيد كلمة السر">
-<button onclick="register()">تسجيل</button>
+<div id="splash">
+    <i class="fas fa-star" style="font-size: 60px; margin-bottom: 20px;"></i>
+    <h1>أنا عمر</h1>
+    <p>بوابتك لعالم الخيال...</p>
 </div>
 
-<!-- App -->
+<!-- Login/Register -->
+<div id="login" class="auth-container">
+    <h3>✨ إنشاء حساب جديد</h3>
+    <input id="reg-name" placeholder="الاسم بالكامل">
+    <input id="reg-email" type="email" placeholder="البريد الإلكتروني">
+    <input id="reg-pass" type="password" placeholder="كلمة السر">
+    <input id="reg-pass2" type="password" placeholder="تأكيد كلمة السر">
+    <button class="main-btn" onclick="registerUser()">تسجيل الدخول</button>
+</div>
+
+<!-- App Content -->
 <div id="app" style="display:none">
-<header>
-ana-omar | مرحبًا <span id="user"></span>
-</header>
+    <header>
+        <h2 style="margin:0; font-family:'Cairo';">أهلاً بك، <span id="user-name-display"></span> ✨</h2>
+    </header>
 
-<nav>
-<button onclick="show('edu')">تعليمية</button>
-<button onclick="show('adv')">مغامرات</button>
-<button onclick="show('moral')">هادفة</button>
-<button onclick="show('admin')">الإدارة</button>
-</nav>
+    <nav>
+        <button id="nav-edu" onclick="showSection('edu')">تعليمية</button>
+        <button id="nav-adv" onclick="showSection('adv')">مغامرات</button>
+        <button id="nav-moral" onclick="showSection('moral')">هادفة</button>
+        <button id="nav-admin" onclick="showSection('admin')">الإدارة</button>
+    </nav>
 
-<section id="edu"></section>
-<section id="adv"></section>
-<section id="moral"></section>
+    <section id="edu"></section>
+    <section id="adv"></section>
+    <section id="moral"></section>
 
-<section id="admin">
-<h3>إضافة قصة</h3>
-<input id="title" placeholder="عنوان القصة">
-<textarea id="content" placeholder="وصف مختصر"></textarea>
-<label>صورة القصة:</label>
-<input type="file" id="imageFile" accept="image/*">
-<label>ملف القصة PDF:</label>
-<input type="file" id="pdf" accept="application/pdf">
-<input id="price" type="number" placeholder="السعر بالجنيه">
-<select id="type">
-<option value="edu">تعليمية</option>
-<option value="adv">مغامرات</option>
-<option value="moral">هادفة</option>
-</select>
-<button onclick="addStory()">حفظ القصة</button>
-</section>
+    <section id="admin">
+        <div style="background:#fff; padding:20px; border-radius:20px;">
+            <h3 style="text-align:center; font-family:'Cairo';">إضافة قصة جديدة</h3>
+            <input id="story-title" placeholder="عنوان القصة">
+            <textarea id="story-desc" placeholder="وصف القصة..."></textarea>
+            
+            <label style="font-size:12px;">صورة الغلاف:</label>
+            <input type="file" id="story-img-file" accept="image/*">
+            
+            <label style="font-size:12px;">ملف القصة (PDF):</label>
+            <input type="file" id="story-pdf-file" accept="application/pdf">
+            
+            <input id="story-price" type="number" placeholder="السعر بالجنيه">
+            
+            <select id="story-type">
+                <option value="edu">تعليمية</option>
+                <option value="adv">مغامرات</option>
+                <option value="moral">هادفة</option>
+            </select>
+            <button class="main-btn" style="background:var(--secondary);" onclick="saveNewStory()">حفظ القصة</button>
+        </div>
+    </section>
 
-<footer>
-جميع الحقوق محفوظة للمؤلف محمد فتحي ©2026
-</footer>
+    <footer>
+        جميع الحقوق محفوظة للمؤلف محمد فتحي ©2026
+    </footer>
+</div>
 
 <script>
-const splash=document.getElementById("splash");
-const login=document.getElementById("login");
-const app=document.getElementById("app");
-const user=document.getElementById("user");
+    // التحكم في شاشة الترحيب
+    window.onload = () => {
+        setTimeout(() => {
+            document.getElementById('splash').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash').style.display = 'none';
+                checkAuth();
+            }, 800);
+        }, 2500);
+    };
 
-/* بعد 3 ثواني من Splash */
-setTimeout(()=>{
-splash.style.display="none";
-let u=JSON.parse(localStorage.getItem("user"));
-if(u){
-app.style.display="block";
-user.innerText=u.name;
-}else{
-login.style.display="block";
-}
-},3000);
+    function checkAuth() {
+        const user = JSON.parse(localStorage.getItem('user_data'));
+        if (user) {
+            document.getElementById('app').style.display = 'block';
+            document.getElementById('user-name-display').innerText = user.name;
+            showSection('edu');
+        } else {
+            document.getElementById('login').style.display = 'block';
+        }
+    }
 
-/* تسجيل المستخدم */
-function register(){
-let n=name.value.trim();
-let e=email.value.trim();
-let p=pass.value.trim();
-let p2=pass2.value.trim();
+    function registerUser() {
+        const name = document.getElementById('reg-name').value;
+        const pass = document.getElementById('reg-pass').value;
+        const pass2 = document.getElementById('reg-pass2').value;
 
-if(n===""||e===""||p
+        if (!name || !pass) { alert("يرجى ملء البيانات"); return; }
+        if (pass !== pass2) { alert("كلمة السر غير متطابقة"); return; }
+
+        localStorage.setItem('user_data', JSON.stringify({ name: name }));
+        location.reload();
+    }
+
+    // إدارة القصص
+    let stories = JSON.parse(localStorage.getItem('stories_list')) || [];
+
+    function showSection(id) {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('nav-' + id).classList.add('active');
+        renderStories();
+    }
+
+    async function saveNewStory() {
+        const title = document.getElementById('story-title').value;
+        const desc = document.getElementById('story-desc').value;
+        const price = document.getElementById('story-price').value;
+        const type = document.getElementById('story-type').value;
+        const imgFile = document.getElementById('story-img-file').files[0];
+        const pdfFile = document.getElementById('story-pdf-file').files[0];
+
+        if (!title || !pdfFile) { alert("العنوان وملف الـ PDF ضروريان"); return; }
+
+        const imgData = imgFile ? await toBase64(imgFile) : 'https://via.placeholder.com/400x250';
+        const pdfData = await toBase64(pdfFile);
+
+        stories.push({
+            id: Date.now(),
+            title: title,
+            desc: desc,
+            price: price,
+            type: type,
+            img: imgData,
+            pdf: pdfData,
+            rate: 0
+        });
+
+        localStorage.setItem('stories_list', JSON.stringify(stories));
+        alert("تم الحفظ بنجاح!");
+        showSection(type);
+    }
+
+    function renderStories() {
+        const types = ['edu', 'adv', 'moral'];
+        types.forEach(t => {
+            const container = document.getElementById(t);
+            if (!container) return;
+            const filtered = stories.filter(s => s.type === t);
+            
+            container.innerHTML = `<h2 style="text-align:center; font-family:'Cairo';">${t === 'edu' ? 'قصص تعليمية' : t === 'adv' ? 'مغامرات' : 'قصص هادفة'}</h2>`;
+            
+            filtered.forEach(s => {
+                container.innerHTML += `
+                    <div class="story-card">
+                        <img src="${s.img}">
+                        <div class="story-card-content">
+                            <h4>${s.title}</h4>
+                            <p style="font-size:14px; color:#666;">${s.desc}</p>
+                            <div style="font-weight:bold; color:var(--secondary); margin-bottom:10px;">${s.price || 0} جنيه</div>
+                            <div class="stars">
+                                ${[1,2,3,4,5].map(i => `<i class="fas fa-star ${i <= s.rate ? 'active' : ''}" onclick="updateRate(${s.id}, ${i})"></i>`).join('')}
+                            </div>
+                            <button class="btn-read" onclick="viewPDF('${s.pdf}')">📖 اقرأ الآن</button>
+                            <button onclick="deleteStory(${s.id})" style="border:none; background:none; color:red; margin-top:10px; display:block; width:100%; cursor:pointer;">حذف</button>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+    }
+
+    function viewPDF(data) {
+        const win = window.open();
+        win.document.write(`<iframe src="${data}" frameborder="0" style="width:100%; height:100vh;"></iframe>`);
+    }
+
+    function deleteStory(id) {
+        if(confirm("حذف القصة؟")) {
+            stories = stories.filter(s => s.id !== id);
+            localStorage.setItem('stories_list', JSON.stringify(stories));
+            renderStories();
+        }
+    }
+
+    function updateRate(id, val) {
+        stories.find(s => s.id === id).rate = val;
+        localStorage.setItem('stories_list', JSON.stringify(stories));
+        renderStories();
+    }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+</script>
+
+</body>
+</html>
