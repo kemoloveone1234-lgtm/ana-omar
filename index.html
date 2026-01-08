@@ -3,154 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>أنا عمر - قصص سينمائية</title>
+    <title>Ana-Omar | عالم القصص المجانية</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@800;900&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #4CAF50; --bg: #ffffff; --text: #2d3436; }
+        :root { 
+            --primary: #4CAF50; --adventure: #FF9800; --purpose: #2196F3; 
+            --admin: #636e72; --bg: #F9FBFF; --text: #2D3436; 
+        }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); margin: 0; padding: 0; font-family: 'Noto Sans Arabic', sans-serif; color: var(--text); }
+
+        /* الهيدر */
+        .app-header {
+            width: 100%; height: 250px;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=1000&auto=format&fit=crop') no-repeat center center;
+            background-size: cover; border-radius: 0 0 50px 50px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: white; text-align: center;
+        }
+        .app-header h1 { font-family: 'Cairo'; font-size: 35px; margin: 0; }
+
+        /* الأزرار الرئيسية */
+        .main-nav { padding: 30px 20px; display: grid; gap: 12px; max-width: 500px; margin: auto; }
+        .nav-btn {
+            padding: 18px; border: none; border-radius: 20px; color: white;
+            font-family: 'Cairo'; font-size: 18px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-edu { background: var(--primary); }
+        .btn-adv { background: var(--adventure); }
+        .btn-pur { background: var(--purpose); }
+        .btn-adm { background: var(--admin); }
+
+        /* الأقسام */
+        .section { display: none; padding: 15px; max-width: 600px; margin: auto; }
+        .section.active { display: block; animation: fadeIn 0.4s; }
+
+        /* عرض القصص السينمائي */
+        .story-item { margin-bottom: 40px; text-align: center; background: white; border-radius: 30px; overflow: hidden; padding-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .story-item img { width: 100%; height: 280px; object-fit: cover; }
+        .story-item h3 { font-family: 'Cairo'; margin: 15px 0; font-size: 22px; }
         
-        body { background-color: var(--bg); margin: 0; padding: 0; font-family: 'Noto Sans Arabic', sans-serif; overflow-x: hidden; }
+        /* القراءة */
+        .read-btn { background: var(--primary); color: white; border: none; padding: 10px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; }
 
-        /* الهيدر: بسيط وأنيق جداً */
-        .app-bar {
-            padding: 20px; background: white; text-align: center;
-            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #f0f0f0;
-        }
-        .app-bar h1 { margin: 0; font-family: 'Cairo'; font-size: 24px; color: var(--primary); }
+        footer { text-align: center; padding: 30px; color: #777; font-size: 13px; border-top: 1px solid #eee; margin-top: 20px; }
 
-        /* قسم القصة: عرض كامل بدون كروت */
-        .story-section {
-            width: 100%; margin-bottom: 40px; position: relative;
-        }
-
-        .story-image {
-            width: 100%; height: 320px; 
-            object-fit: cover; display: block;
-            /* لمسة جمالية: انحناء بسيط في الأسفل */
-            border-radius: 0 0 40px 40px;
-        }
-
-        .story-content {
-            padding: 25px; text-align: center;
-        }
-
-        .story-content h2 {
-            font-family: 'Cairo'; font-size: 26px; margin: 10px 0; color: #333;
-        }
-
-        .story-content p {
-            font-size: 16px; color: #636e72; line-height: 1.6; margin-bottom: 20px;
-        }
-
-        /* زر الفتح السينمائي */
-        .btn-start {
-            background: var(--primary); color: white; border: none;
-            padding: 15px 40px; border-radius: 30px; font-size: 18px;
-            font-weight: 900; cursor: pointer; font-family: 'Cairo';
-            box-shadow: 0 10px 20px rgba(76, 175, 80, 0.2);
-        }
-
-        /* صفحة القراءة الكاملة */
-        .page { display: none; }
-        .active { display: block; }
-
-        .reader-view { padding: 0 0 40px 0; }
-        .reader-view .full-img { width: 100%; height: 350px; object-fit: cover; }
-        .reader-text {
-            padding: 35px 25px; font-size: 22px; line-height: 2.3;
-            text-align: justify; color: #2d3436;
-        }
-
-        .back-nav {
-            position: fixed; top: 20px; right: 20px;
-            background: rgba(255,255,255,0.9); width: 45px; height: 45px;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 200;
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div id="home" class="page active">
-    <div class="app-bar">
-        <h1>أنا عمر</h1>
+<div id="home-view">
+    <div class="app-header">
+        <h1>Ana-Omar</h1>
+        <p>استمتع بجميع القصص مجاناً</p>
     </div>
 
-    <div id="story-list">
-        </div>
+    <div class="main-nav">
+        <button class="nav-btn btn-edu" onclick="showSection('edu')"><i class="fas fa-book-reader"></i> قصص تعليمية</button>
+        <button class="nav-btn btn-adv" onclick="showSection('adv')"><i class="fas fa-rocket"></i> قصص مغامرات</button>
+        <button class="nav-btn btn-pur" onclick="showSection('pur')"><i class="fas fa-star"></i> قصص هادفة</button>
+        <button class="nav-btn btn-adm" onclick="showSection('settings')"><i class="fas fa-tools"></i> لوحة التحكم</button>
+    </div>
 </div>
 
-<div id="reader" class="page">
-    <div class="back-nav" onclick="closeStory()">
-        <i class="fas fa-chevron-right" style="color: var(--primary); font-size: 20px;"></i>
-    </div>
-    <div class="reader-view">
-        <img id="view-img" class="full-img">
-        <div id="view-title" style="padding: 20px 25px 0; font-family: 'Cairo'; font-size: 28px; color: var(--primary);"></div>
-        <div id="view-text" class="reader-text"></div>
-    </div>
+<div id="edu" class="section">
+    <button onclick="goHome()" class="nav-btn" style="background:#636e72; padding:8px 20px; margin-bottom:15px;">العودة</button>
+    <div id="edu-list"></div>
 </div>
+
+<div id="adv" class="section">
+    <button onclick="goHome()" class="nav-btn" style="background:#636e72; padding:8px 20px; margin-bottom:15px;">العودة</button>
+    <div id="adv-list"></div>
+</div>
+
+<div id="pur" class="section">
+    <button onclick="goHome()" class="nav-btn" style="background:#636e72; padding:8px 20px; margin-bottom:15px;">العودة</button>
+    <div id="pur-list"></div>
+</div>
+
+<div id="settings" class="section">
+    <button onclick="goHome()" class="nav-btn" style="background:#636e72; padding:8px 20px; margin-bottom:15px;">العودة</button>
+    <h3>إضافة قصة جديدة</h3>
+    <input type="text" id="s-title" placeholder="عنوان القصة" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
+    <select id="s-type" style="width:100%; padding:12px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
+        <option value="edu">تعليمية</option>
+        <option value="adv">مغامرات</option>
+        <option value="pur">هادفة</option>
+    </select>
+    <button class="nav-btn btn-edu" style="width:100%" onclick="addStory()">حفظ في القائمة المجانية</button>
+    <p style="font-size:12px; color:gray; text-align:center; margin-top:20px;">للدعم الفني: فودافون كاش 01063858006</p>
+</div>
+
+<footer>
+    جميع الحقوق محفوظة للمؤلف محمد فتحي @2026
+</footer>
 
 <script>
-    const stories = [
-        {
-            id: 1,
-            title: 'عمر وسر الحروف',
-            desc: 'مغامرة ذكية للبحث عن الحروف المختبئة بين الألعاب.',
-            img: 'https://img.freepik.com/free-photo/view-3d-boy-reading-book_23-2150790856.jpg',
-            fullText: `في صباح يوم مشرق وجميل، استيقظ عمر وهو متحمس جداً لقراءة كتابه الجديد. لكنه عندما فتح الصفحة الأولى، صدم بشيء غريب.. لقد اختفت الحروف تماماً من الورق!
-
-لم يستسلم عمر، بل أحضر عدسته المكبرة وبدأ يبحث في غرفته. بحث تحت السرير، وخلف الستارة، وحتى في علبة ألوانه. وفجأة، سمع صوتاً ضاحكاً يأتي من خلف المكتبة الخشبية الكبيرة.
-
-كانت الحروف تختبئ هناك وهي تهمس: "لقد أردنا أن نلعب معك يا عمر! هل يمكنك أن تجمعنا لنكون كلمات مفيدة؟". ضحك عمر وقال: "طبعاً يا أصدقائي!".`
-        },
-        {
-            id: 2,
-            title: 'عمر في الفضاء',
-            desc: 'انطلق مع عمر في صاروخه الكرتوني لزيارة كوكب السكاكر.',
-            img: 'https://img.freepik.com/free-photo/view-3d-astronaut-boy_23-2150710041.jpg',
-            fullText: `كان عمر يحلم دائماً بأن يلمس النجوم البعيدة. في أحد الأيام، قرر أن يصنع صاروخه الخاص من صناديق الكرتون الكبيرة وألوان الرسم اللامعة التي تشبه ضوء القمر.
-
-بمجرد أن جلس عمر داخل صاروخه وأغمض عينيه، شعر باهتزاز قوي.. وفجأة! انطلق الصاروخ في الفضاء الواسع. شاهد عمر الأرض من بعيد وهي تبدو مثل كرة زرقاء صغيرة وجميلة تسبح في الظلام.
-
-قال عمر في نفسه: "يا له من كون واسع وعظيم خلقه الله لنا!". وقبل أن يحل الليل، عاد عمر بصاروخه إلى غرفته بسلام.`
-        }
-    ];
-
-    function loadStories() {
-        const container = document.getElementById('story-list');
-        container.innerHTML = stories.map(s => `
-            <div class="story-section">
-                <img src="${s.img}" class="story-image">
-                <div class="story-content">
-                    <h2>${s.title}</h2>
-                    <p>${s.desc}</p>
-                    <button class="btn-start" onclick="openStory(${s.id})">ابدأ القراءة</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function openStory(id) {
-        const s = stories.find(x => x.id === id);
-        document.getElementById('view-img').src = s.img;
-        document.getElementById('view-title').innerText = s.title;
-        document.getElementById('view-text').innerText = s.fullText;
-        document.getElementById('home').style.display = 'none';
-        document.getElementById('reader').style.display = 'block';
-        window.scrollTo(0,0);
-    }
-
-    function closeStory() {
-        document.getElementById('reader').style.display = 'none';
-        document.getElementById('home').style.display = 'block';
-    }
-
-    loadStories();
-</script>
-
-</body>
-</html>
+    // تم استخدام روابط صور ثابتة وعالمية لضمان عملها
+    let stories = [
+        { id: 1, title: "عمر وال
