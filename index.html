@@ -9,83 +9,83 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #FF5722; --secondary: #4CAF50; --bg: #F0F2F5; }
+        :root { --primary: #FF5722; --secondary: #4CAF50; --bg: #F5F7FA; }
         * { box-sizing: border-box; font-family: 'Noto Sans Arabic', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); margin: 0; padding: 0; }
 
-        /* الهيدر صغرنا حجمه شوية */
+        /* تصغير الهيدر وتنسيقه */
         .header-main {
-            width: 100%; height: 180px;
+            width: 100%; height: 160px;
             background: linear-gradient(135deg, #FF5722, #FF9800);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border-radius: 0 0 30px 30px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 25px 25px; color: white; box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
-        .header-main h1 { margin: 0; font-size: 24px; }
-        .header-main p { margin: 5px 0 0; font-size: 14px; opacity: 0.9; }
+        .header-main h1 { margin: 0; font-size: 22px; font-weight: 900; }
+        .header-main p { margin: 5px 0 0; font-size: 13px; opacity: 0.9; }
 
-        .container { padding: 15px; max-width: 500px; margin: auto; }
+        .container { padding: 12px; max-width: 480px; margin: auto; }
 
-        /* الكروت: الصور تمتد بالكامل والحواف ناعمة */
+        /* الكروت: الصور تمتد بالكامل داخل الإطار */
         .card {
-            background: white; border-radius: 20px; overflow: hidden;
-            margin-bottom: 20px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background: white; border-radius: 18px; overflow: hidden;
+            margin-bottom: 15px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.06);
         }
-        .card-img { width: 100%; height: 180px; object-fit: cover; display: block; }
-        .card-info { padding: 15px; text-align: center; }
-        .card-info h3 { margin: 0 0 10px; font-size: 18px; color: #333; }
+        .card-img-container { width: 100%; height: 170px; overflow: hidden; }
+        .card-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        
+        .card-info { padding: 12px; text-align: center; }
+        .card-info h3 { margin: 0 0 8px; font-size: 17px; color: #333; }
         
         .btn-open {
-            background: var(--secondary); color: white; border: none; padding: 10px 25px;
-            border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; width: 80%;
+            background: var(--secondary); color: white; border: none; padding: 10px 0;
+            border-radius: 20px; font-size: 15px; font-weight: bold; cursor: pointer; width: 90%;
         }
 
-        /* صفحة القراءة المحدثة */
+        /* صفحة القراءة */
         .page { display: none; }
-        .active { display: block; animation: fadeIn 0.3s; }
+        .active { display: block; animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .nav-bar { padding: 12px 15px; background: white; display: flex; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
-        .nav-bar h3 { flex: 1; text-align: center; margin: 0; font-size: 16px; color: #444; }
+        .nav-bar { padding: 10px 15px; background: white; display: flex; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
+        .nav-bar h3 { flex: 1; text-align: center; margin: 0; font-size: 15px; color: #444; }
 
-        .story-content { padding: 20px; font-size: 18px; line-height: 1.8; text-align: justify; color: #444; background: white; }
+        .story-content { padding: 18px; font-size: 17px; line-height: 1.7; text-align: justify; color: #444; background: white; }
 
-        /* التقييم بشكل أصغر وأرتب */
+        /* التقييم بشكل أصغر */
         .rating-area {
-            background: #fff; margin: 15px; padding: 20px; border-radius: 20px;
+            background: #fff; margin: 12px; padding: 15px; border-radius: 18px;
             text-align: center; border: 2px dashed #ddd;
         }
-        .rating-area h3 { font-size: 16px; margin-bottom: 10px; }
-        .stars-container { margin: 10px 0; direction: ltr; }
-        .stars-container i { font-size: 28px; color: #eee; cursor: pointer; margin: 0 3px; }
+        .stars-container { margin: 8px 0; direction: ltr; }
+        .stars-container i { font-size: 24px; color: #eee; cursor: pointer; margin: 0 2px; }
         .stars-container i.active { color: #FFD700; }
         
-        .msg-thanks { color: var(--secondary); font-size: 14px; font-weight: bold; display: none; margin-top: 8px; }
-
-        .footer-spacer { height: 30px; }
+        .msg-thanks { color: var(--secondary); font-size: 13px; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
 
 <div id="home-page" class="page active">
     <div class="header-main">
-        <i class="fas fa-rocket" style="font-size: 40px; margin-bottom: 8px;"></i>
+        <i class="fas fa-child" style="font-size: 35px; margin-bottom: 5px;"></i>
         <h1>أنا عمر</h1>
-        <p>عالم القصص والمغامرات</p>
+        <p>مغامرات ذكية وممتعة</p>
     </div>
     <div class="container" id="list-container"></div>
-    <div class="footer-spacer"></div>
 </div>
 
 <div id="reader-page" class="page">
     <div class="nav-bar">
-        <i class="fas fa-chevron-right" onclick="goBack()" style="font-size: 20px; color: var(--primary); cursor: pointer;"></i>
+        <i class="fas fa-chevron-right" onclick="goBack()" style="font-size: 18px; color: var(--primary); cursor: pointer;"></i>
         <h3 id="view-title"></h3>
     </div>
-    <img id="view-img" src="" style="width:100%; height:220px; object-fit:cover;">
+    <div style="width:100%; height:200px; overflow:hidden;">
+        <img id="view-img" src="" style="width:100%; height:100%; object-fit:cover;">
+    </div>
     <div id="view-text" class="story-content"></div>
 
     <div class="rating-area">
-        <h3>قيم القصة يا بطل</h3>
+        <h3 style="font-size: 14px;">قيم القصة يا بطل</h3>
         <div class="stars-container">
             <i class="fas fa-star" onclick="giveRating(1)"></i>
             <i class="fas fa-star" onclick="giveRating(2)"></i>
@@ -94,9 +94,8 @@
             <i class="fas fa-star" onclick="giveRating(5)"></i>
         </div>
         <div id="thanks" class="msg-thanks">شكراً لك يا عمر! ✨</div>
-        <button class="btn-open" style="margin-top:15px; background: var(--primary); width: 100%;" onclick="goBack()">العودة للرئيسية</button>
+        <button class="btn-open" style="margin-top:10px; background: var(--primary); width: 100%;" onclick="goBack()">رجوع</button>
     </div>
-    <div class="footer-spacer"></div>
 </div>
 
 <script>
@@ -104,19 +103,19 @@
         { 
             id: 1, 
             t: 'عمر وسر الحروف', 
-            i: 'https://cdn.pixabay.com/photo/2023/08/30/11/40/boy-8223126_1280.png', 
+            i: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=500&q=80', 
             c: `في صباح جميل، استيقظ عمر ليجد كتابه المفضل فارغاً من الحروف! بدأ يبحث عنها في كل زاوية. وجد حرف الألف يختبئ تحت وسادته، وحرف الباء يلعب في المطبخ. ضحك عمر وجمع كل الحروف ليعيد كتابة أجمل القصص. تعلم عمر أن القراءة تجعلنا نرى العالم بشكل أجمل وأكبر.`
         },
         { 
             id: 2, 
             t: 'رحلة عمر للفضاء', 
-            i: 'https://cdn.pixabay.com/photo/2023/11/14/15/46/astronaut-8388001_1280.png', 
+            i: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=500&q=80', 
             c: `صنع عمر صاروخاً كرتونياً رائعاً. وفجأة، وجد نفسه يطير بين النجوم! زار كوكب الألعاب حيث الروبوتات الودودة، وشاهد زحل بحلقاته الملونة. قال عمر: "سبحان الله ما أعظم هذا الكون!". عاد عمر لغرفته وهو يخطط لرحلته القادمة في خياله الواسع.`
         },
         { 
             id: 3, 
             t: 'عمر الصادق الأمين', 
-            i: 'https://cdn.pixabay.com/photo/2023/03/05/16/40/boy-7831773_1280.png', 
+            i: 'https://images.unsplash.com/photo-1532330393533-443990a51d10?auto=format&fit=crop&w=500&q=80', 
             c: `بينما كان عمر يلعب في الحديقة، وجد محفظة مفقودة. لم يتردد عمر لحظة، بل ذهب مسرعاً لوالده ليساعده في العثور على صاحبها. عندما عادت المحفظة لصاحبها، شكر عمر كثيراً ووصفه بالبطل. شعر عمر بسعادة غامرة لأن الصدق هو سر القوة الحقيقية.`
         }
     ];
@@ -127,7 +126,9 @@
         myStories.forEach(s => {
             container.innerHTML += `
                 <div class="card">
-                    <img src="${s.i}" class="card-img" onerror="this.src='https://via.placeholder.com/400x200?text=Omar+Story'">
+                    <div class="card-img-container">
+                        <img src="${s.i}" class="card-img" alt="story image">
+                    </div>
                     <div class="card-info">
                         <h3>${s.t}</h3>
                         <button class="btn-open" onclick="readNow(${s.id})">فتح القصة</button>
