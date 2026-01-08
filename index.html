@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>أنا عمر - عالم القصص</title>
+    <title>أنا عمر - عالم القصص 3D</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,6 +13,7 @@
         * { box-sizing: border-box; font-family: 'Noto Sans Arabic', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); margin: 0; padding: 0; }
 
+        /* الغلاف العلوي */
         .header-main {
             width: 100%; height: 240px;
             background: linear-gradient(135deg, #FF5722, #FF9800);
@@ -22,23 +23,26 @@
 
         .container { padding: 20px; max-width: 600px; margin: auto; }
 
+        /* كروت القصص */
         .card {
             background: white; border-radius: 25px; overflow: hidden;
             margin-bottom: 25px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-        .card-img { width: 100%; height: 200px; object-fit: cover; }
+        .card-img { width: 100%; height: 220px; object-fit: cover; }
         .card-info { padding: 15px; text-align: center; }
         .btn-open {
             background: var(--secondary); color: white; border: none; padding: 12px 30px;
             border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%;
         }
 
+        /* صفحة القراءة */
         .page { display: none; }
         .active { display: block; }
         
         .nav-bar { padding: 15px; background: white; display: flex; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
         .story-content { padding: 25px; font-size: 24px; line-height: 2.1; text-align: justify; white-space: pre-line; color: #333; }
 
+        /* نظام التقييم */
         .rating-area {
             background: white; margin: 20px; padding: 30px; border-radius: 30px;
             text-align: center; border: 3px dashed #FF9800;
@@ -54,9 +58,9 @@
 
 <div id="home-page" class="page active">
     <div class="header-main">
-        <i class="fas fa-book-open" style="font-size: 60px; margin-bottom: 10px;"></i>
+        <i class="fas fa-magic" style="font-size: 60px; margin-bottom: 10px;"></i>
         <h1 style="margin:0;">أنا عمر</h1>
-        <p>استمتع بأجمل القصص الطويلة</p>
+        <p>مغامرات 3D ممتعة جداً</p>
     </div>
     <div class="container" id="list-container"></div>
 </div>
@@ -66,11 +70,11 @@
         <i class="fas fa-arrow-right" onclick="goBack()" style="font-size: 25px; color: var(--primary); cursor: pointer;"></i>
         <h3 id="view-title" style="flex:1; text-align:center; margin:0;"></h3>
     </div>
-    <img id="view-img" src="" style="width:100%; height:280px; object-fit:cover;">
+    <img id="view-img" src="" style="width:100%; height:300px; object-fit:cover;">
     <div id="view-text" class="story-content"></div>
 
     <div class="rating-area">
-        <h3>هل أعجبتك يا بطل؟</h3>
+        <h3>هل أعجبتك المغامرة؟ ✨</h3>
         <div class="stars-container">
             <i class="fas fa-star" onclick="giveRating(1)"></i>
             <i class="fas fa-star" onclick="giveRating(2)"></i>
@@ -78,7 +82,7 @@
             <i class="fas fa-star" onclick="giveRating(4)"></i>
             <i class="fas fa-star" onclick="giveRating(5)"></i>
         </div>
-        <div id="thanks" class="msg-thanks">رائع! تم تسجيل تقييمك يا عمر ✨</div>
+        <div id="thanks" class="msg-thanks">رائع! تم تسجيل تقييمك يا بطل ✨</div>
         <button class="btn-open" style="margin-top:20px; background: var(--primary);" onclick="goBack()">العودة للرئيسية</button>
     </div>
 </div>
@@ -88,19 +92,19 @@
         { 
             id: 1, 
             t: 'عمر وسر الحروف الضائعة', 
-            i: 'https://img.freepik.com/free-vector/cute-boy-reading-book-cartoon-vector-icon-illustration-people-education-icon-concept-isolated_138676-2107.jpg', 
+            i: 'https://img.freepik.com/free-photo/view-3d-boy-reading-book_23-2150790856.jpg', // صورة 3D لولد يقرأ
             c: `في صباح يوم مشرق وجميل، استيقظ عمر وهو متحمس جداً لقراءة كتابه الجديد. لكنه عندما فتح الصفحة الأولى، صدم بشيء غريب.. لقد اختفت الحروف تماماً!
 
 لم يستسلم عمر، بل أحضر عدسته المكبرة وبدأ يبحث في غرفته. بحث تحت السرير، وخلف الستارة، وحتى في علبة ألوانه. وفجأة، سمع صوتاً ضاحكاً يأتي من خلف المكتبة.
 
 كانت الحروف تختبئ هناك وهي تهمس: "لقد أردنا أن نلعب معك يا عمر! هل يمكنك أن تجمعنا لنكون كلمات مفيدة؟". ضحك عمر وقال: "طبعاً يا أصدقائي!".
 
-بدأ عمر يمسك حرف "الألف" ويضعه بجانب حرف "اللام"، ثم حرف "السين" لتصبح كلمة (الصدق). وهكذا، قضى عمر يومه في ترتيب الحروف حتى امتلأ الكتاب بالحكايات الرائعة مرة أخرى. تعلم عمر أن الصبر والذكاء يحلان أي مشكلة، وأصبح يحب القراءة أكثر من أي وقت مضى.`
+بدأ عمر يمسك حرف "الألف" ويضعه بجانب حرف "اللام"، ثم حرف "السين" لتصبح كلمة (الصدق). وهكذا، قضى عمر يومه في ترتيب الحروف حتى امتلأ الكتاب بالحكايات الرائعة مرة أخرى. تعلم عمر أن الصبر والذكاء يحلان أي مشكلة.`
         },
         { 
             id: 2, 
             t: 'عمر ورحلة الفضاء العجيبة', 
-            i: 'https://img.freepik.com/free-vector/cute-astronaut-flying-with-rocket-cartoon-vector-icon-illustration-science-technology-icon-concept_138676-2122.jpg', 
+            i: 'https://img.freepik.com/free-photo/view-3d-astronaut-boy_23-2150710041.jpg', // صورة 3D لرائد فضاء صغير
             c: `كان عمر يحلم دائماً بأن يلمس النجوم. في أحد الأيام، قرر أن يصنع صاروخه الخاص من صناديق الكرتون الكبيرة وألوان الرسم اللامعة.
 
 بمجرد أن جلس عمر داخل صاروخه وأغمض عينيه، شعر باهتزاز قوي.. وفجأة! انطلق الصاروخ في الفضاء الواسع. شاهد عمر الأرض من بعيد وهي تبدو مثل كرة زرقاء صغيرة وجميلة.
@@ -112,14 +116,12 @@
         { 
             id: 3, 
             t: 'عمر وبطل الأمانة', 
-            i: 'https://img.freepik.com/free-vector/happy-muslim-boy-cartoon_1308-44473.jpg', 
+            i: 'https://img.freepik.com/free-photo/view-3d-boy-with-nature-background_23-2150806440.jpg', // صورة 3D لولد في الطبيعة
             c: `بينما كان عمر يلعب في الحديقة مع أصدقائه، وجد محفظة صغيرة زرقاء ملقاة بجانب المقعد الخشبي. فتحها عمر ووجد بداخلها مبلغاً كبيراً من المال وصورة لرجل مسن.
 
-فكر عمر لثانية: "يمكنني شراء اللعبة التي حلمت بها!"، لكنه تذكر فوراً ما تعلمه عن الأمانة والصدق. ذهب عمر مسرعاً إلى والده وأخبره بالقصة.
+تذكر عمر فوراً ما تعلمه عن الأمانة والصدق. ذهب عمر مسرعاً إلى والده وأخبره بالقصة. بدأ عمر ووالده بالبحث عن صاحب المحفظة في الحديقة، حتى وجدا رجلاً مسناً يبدو عليه الحزن الشديد.
 
-بدأ عمر ووالده بالبحث عن صاحب المحفظة في الحديقة، حتى وجدا رجلاً مسناً يبدو عليه الحزن الشديد وهو يبحث عن شيء ما. اقترب منه عمر وقال: "هل هذه محفظتك يا سيدي؟".
-
-فرح الرجل جداً وشكر عمر كثيراً، وقال له: "أنت بطل حقيقي يا بني، الأمانة هي أغلى من كل كنوز العالم". شعر عمر بفرحة كبيرة في قلبه، وتعلم أن فعل الصواب دائماً ما يجعلنا سعداء وفخورين بأنفسنا.`
+اقترب منه عمر وقال: "هل هذه محفظتك يا سيدي؟". فرح الرجل جداً وشكر عمر كثيراً، وقال له: "أنت بطل حقيقي يا بني، الأمانة هي أغلى من كل كنوز العالم". شعر عمر بفرحة كبيرة في قلبه، وتعلم أن فعل الصواب دائماً ما يجعلنا سعداء وفخورين بأنفسنا.`
         }
     ];
 
@@ -132,7 +134,7 @@
                     <img src="${s.i}" class="card-img">
                     <div class="card-info">
                         <h3>${s.t}</h3>
-                        <button class="btn-open" onclick="readNow(${s.id})">ابدأ القراءة</button>
+                        <button class="btn-open" onclick="readNow(${s.id})">فتح القصة</button>
                     </div>
                 </div>`;
         });
@@ -156,9 +158,7 @@
 
     function giveRating(num) {
         const stars = document.querySelectorAll('.stars-container i');
-        stars.forEach((s, index) => {
-            s.classList.toggle('active', index < num);
-        });
+        stars.forEach((s, index) => { s.classList.toggle('active', index < num); });
         document.getElementById('thanks').style.display = 'block';
     }
 
