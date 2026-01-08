@@ -6,72 +6,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:Tahoma;
-  background:#fff7e6;
-  direction:rtl;
-}
-header{
-  background:#ff9800;
-  color:#fff;
-  text-align:center;
-  padding:12px;
-  font-size:20px;
-}
-nav{
-  display:flex;
-  justify-content:space-around;
-  background:#ffe0b2;
-  padding:8px;
-}
-nav button{
-  font-size:14px;
-  padding:6px 10px;
-  border:none;
-  background:#ff9800;
-  color:#fff;
-  border-radius:4px;
-}
-section{
-  display:none;
-  padding:15px;
-}
-section.active{
-  display:block;
-}
-.story{
-  background:#fff;
-  padding:10px;
-  margin-bottom:10px;
-  border-radius:6px;
-}
-.story img{
-  max-width:100%;
-  border-radius:6px;
-}
-input,textarea,select{
-  width:100%;
-  margin:5px 0;
-  padding:6px;
-}
-.small-btn{
-  font-size:12px;
-  padding:4px 6px;
-  margin:2px;
-}
-footer{
-  text-align:center;
-  font-size:13px;
-  color:#666;
-  margin:20px 0;
-}
-.pay{
-  background:#fff;
-  padding:10px;
-  border-radius:6px;
-  margin-top:10px;
-}
+body{margin:0;font-family:Tahoma;background:#fff7e6;direction:rtl}
+header{background:#ff9800;color:#fff;text-align:center;padding:12px;font-size:20px}
+nav{display:flex;justify-content:space-around;background:#ffe0b2;padding:8px}
+nav button{font-size:14px;padding:6px 10px;border:none;background:#ff9800;color:#fff;border-radius:4px}
+section{display:none;padding:15px}
+section.active{display:block}
+.story{background:#fff;padding:10px;margin-bottom:10px;border-radius:6px}
+.story img{max-width:100%;border-radius:6px}
+input,textarea,select{width:100%;margin:5px 0;padding:6px}
+.small-btn{font-size:12px;padding:4px 6px;margin:2px}
+.star{font-size:18px;cursor:pointer;color:#ccc}
+.star.active{color:#ff9800}
+footer{text-align:center;font-size:13px;color:#666;margin:20px 0}
+.pay{background:#fff;padding:10px;border-radius:6px;margin-top:10px}
 </style>
 </head>
 
@@ -91,23 +39,25 @@ footer{
 <section id="moral"></section>
 
 <section id="admin">
-  <h3>إضافة / تعديل قصة</h3>
-  <input id="title" placeholder="عنوان القصة">
-  <textarea id="content" placeholder="محتوى القصة"></textarea>
-  <input id="image" placeholder="رابط صورة كرتونية">
-  <input id="price" type="number" placeholder="السعر بالجنيه">
-  <select id="type">
-    <option value="edu">تعليمية</option>
-    <option value="adv">مغامرات</option>
-    <option value="moral">هادفة</option>
-  </select>
-  <button onclick="addStory()">حفظ القصة</button>
+<h3>إضافة / تعديل قصة</h3>
 
-  <div class="pay">
-    <h4>بوابات الدفع</h4>
-    <p>📱 فودافون كاش: <b>01063858006</b></p>
-    <p>💳 إنستاباي: <b>01063858006</b></p>
-  </div>
+<input id="title" placeholder="عنوان القصة">
+<textarea id="content" placeholder="وصف مختصر للقصة"></textarea>
+<input id="image" placeholder="رابط صورة كرتونية">
+<input type="file" id="pdf" accept="application/pdf">
+<input id="price" type="number" placeholder="السعر بالجنيه">
+<select id="type">
+<option value="edu">تعليمية</option>
+<option value="adv">مغامرات</option>
+<option value="moral">هادفة</option>
+</select>
+<button onclick="addStory()">حفظ القصة</button>
+
+<div class="pay">
+<h4>بوابات الدفع</h4>
+<p>📱 فودافون كاش: <b>01063858006</b></p>
+<p>💳 إنستاباي: <b>01063858006</b></p>
+</div>
 </section>
 
 <footer>
@@ -124,19 +74,27 @@ function show(id){
 }
 
 function addStory(){
-  let s={
-    id:Date.now(),
-    title:title.value,
-    content:content.value,
-    image:image.value,
-    price:price.value,
-    type:type.value
-  };
-  stories.push(s);
-  localStorage.setItem("stories",JSON.stringify(stories));
-  alert("تم حفظ القصة");
-  title.value=content.value=image.value=price.value="";
-  render();
+  let file=document.getElementById("pdf").files[0];
+  if(!file){alert("ارفع ملف PDF");return;}
+  let reader=new FileReader();
+  reader.onload=function(){
+    let s={
+      id:Date.now(),
+      title:title.value,
+      content:content.value,
+      image:image.value,
+      price:price.value,
+      type:type.value,
+      pdf:reader.result,
+      rate:0
+    };
+    stories.push(s);
+    localStorage.setItem("stories",JSON.stringify(stories));
+    alert("تم حفظ القصة");
+    title.value=content.value=image.value=price.value="";
+    render();
+  }
+  reader.readAsDataURL(file);
 }
 
 function del(id){
@@ -145,20 +103,34 @@ function del(id){
   render();
 }
 
+function rate(id,val){
+  stories.find(s=>s.id===id).rate=val;
+  localStorage.setItem("stories",JSON.stringify(stories));
+  render();
+}
+
 function render(){
-  ["edu","adv","moral"].forEach(t=>{
-    let box=document.getElementById(t);
-    box.innerHTML="";
-    stories.filter(s=>s.type===t).forEach(s=>{
-      box.innerHTML+=`
-      <div class="story">
-        <h4>${s.title} - ${s.price} جنيه</h4>
-        <img src="${s.image}">
-        <p>${s.content}</p>
-        <button class="small-btn" onclick="del(${s.id})">حذف</button>
-      </div>`;
-    });
-  });
+["edu","adv","moral"].forEach(t=>{
+let box=document.getElementById(t);
+box.innerHTML="";
+stories.filter(s=>s.type===t).forEach(s=>{
+box.innerHTML+=`
+<div class="story">
+<h4>${s.title} - ${s.price} جنيه</h4>
+<img src="${s.image}">
+<p>${s.content}</p>
+
+<button class="small-btn" onclick="window.open('${s.pdf}')">📖 اقرأ القصة</button>
+<button class="small-btn" onclick="del(${s.id})">🗑 حذف</button>
+
+<div>
+${[1,2,3,4,5].map(i=>`
+<span class="star ${i<=s.rate?'active':''}" onclick="rate(${s.id},${i})">★</span>
+`).join("")}
+</div>
+</div>`;
+});
+});
 }
 
 show("edu");
