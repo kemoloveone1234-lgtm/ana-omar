@@ -20,18 +20,32 @@ input,textarea,select{width:100%;margin:5px 0;padding:6px}
 .star.active{color:#ff9800}
 footer{text-align:center;font-size:13px;color:#666;margin:20px 0}
 .pay{background:#fff;padding:10px;border-radius:6px;margin-top:10px}
+.center{max-width:350px;margin:80px auto;background:#fff;padding:15px;border-radius:8px}
 </style>
 </head>
 
 <body>
 
-<header>ana-omar | قصص الأطفال</header>
+<!-- شاشة تسجيل الدخول -->
+<div id="login" class="center">
+<h3>إنشاء حساب</h3>
+<input id="username" placeholder="اسم المستخدم">
+<input id="password" type="password" placeholder="كلمة المرور">
+<button onclick="register()">دخول</button>
+</div>
+
+<!-- التطبيق -->
+<div id="app" style="display:none">
+
+<header>
+ana-omar | مرحبًا <span id="user"></span>
+</header>
 
 <nav>
-  <button onclick="show('edu')">تعليمية</button>
-  <button onclick="show('adv')">مغامرات</button>
-  <button onclick="show('moral')">هادفة</button>
-  <button onclick="show('admin')">الإدارة</button>
+<button onclick="show('edu')">تعليمية</button>
+<button onclick="show('adv')">مغامرات</button>
+<button onclick="show('moral')">هادفة</button>
+<button onclick="show('admin')">الإدارة</button>
 </nav>
 
 <section id="edu"></section>
@@ -39,10 +53,9 @@ footer{text-align:center;font-size:13px;color:#666;margin:20px 0}
 <section id="moral"></section>
 
 <section id="admin">
-<h3>إضافة / تعديل قصة</h3>
-
+<h3>إضافة قصة</h3>
 <input id="title" placeholder="عنوان القصة">
-<textarea id="content" placeholder="وصف مختصر للقصة"></textarea>
+<textarea id="content" placeholder="وصف مختصر"></textarea>
 <input id="image" placeholder="رابط صورة كرتونية">
 <input type="file" id="pdf" accept="application/pdf">
 <input id="price" type="number" placeholder="السعر بالجنيه">
@@ -64,49 +77,67 @@ footer{text-align:center;font-size:13px;color:#666;margin:20px 0}
 جميع الحقوق محفوظة للمؤلف محمد فتحي ©2026
 </footer>
 
+</div>
+
 <script>
-let stories = JSON.parse(localStorage.getItem("stories")) || [];
+/* ====== تسجيل الدخول ====== */
+let currentUser=localStorage.getItem("user");
+if(currentUser){
+login.style.display="none";
+app.style.display="block";
+user.innerText=currentUser;
+}
+
+function register(){
+if(!username.value||!password.value){alert("أدخل البيانات");return;}
+localStorage.setItem("user",username.value);
+login.style.display="none";
+app.style.display="block";
+user.innerText=username.value;
+}
+
+/* ====== القصص ====== */
+let stories=JSON.parse(localStorage.getItem("stories"))||[];
 
 function show(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  render();
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+render();
 }
 
 function addStory(){
-  let file=document.getElementById("pdf").files[0];
-  if(!file){alert("ارفع ملف PDF");return;}
-  let reader=new FileReader();
-  reader.onload=function(){
-    let s={
-      id:Date.now(),
-      title:title.value,
-      content:content.value,
-      image:image.value,
-      price:price.value,
-      type:type.value,
-      pdf:reader.result,
-      rate:0
-    };
-    stories.push(s);
-    localStorage.setItem("stories",JSON.stringify(stories));
-    alert("تم حفظ القصة");
-    title.value=content.value=image.value=price.value="";
-    render();
-  }
-  reader.readAsDataURL(file);
+let file=pdf.files[0];
+if(!file){alert("ارفع ملف PDF");return;}
+let reader=new FileReader();
+reader.onload=function(){
+stories.push({
+id:Date.now(),
+title:title.value,
+content:content.value,
+image:image.value,
+price:price.value,
+type:type.value,
+pdf:reader.result,
+rate:0
+});
+localStorage.setItem("stories",JSON.stringify(stories));
+alert("تم حفظ القصة");
+title.value=content.value=image.value=price.value="";
+render();
+}
+reader.readAsDataURL(file);
 }
 
 function del(id){
-  stories=stories.filter(s=>s.id!==id);
-  localStorage.setItem("stories",JSON.stringify(stories));
-  render();
+stories=stories.filter(s=>s.id!==id);
+localStorage.setItem("stories",JSON.stringify(stories));
+render();
 }
 
 function rate(id,val){
-  stories.find(s=>s.id===id).rate=val;
-  localStorage.setItem("stories",JSON.stringify(stories));
-  render();
+stories.find(s=>s.id===id).rate=val;
+localStorage.setItem("stories",JSON.stringify(stories));
+render();
 }
 
 function render(){
@@ -119,10 +150,8 @@ box.innerHTML+=`
 <h4>${s.title} - ${s.price} جنيه</h4>
 <img src="${s.image}">
 <p>${s.content}</p>
-
-<button class="small-btn" onclick="window.open('${s.pdf}')">📖 اقرأ القصة</button>
+<button class="small-btn" onclick="window.open('${s.pdf}')">📖 اقرأ</button>
 <button class="small-btn" onclick="del(${s.id})">🗑 حذف</button>
-
 <div>
 ${[1,2,3,4,5].map(i=>`
 <span class="star ${i<=s.rate?'active':''}" onclick="rate(${s.id},${i})">★</span>
