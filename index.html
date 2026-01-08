@@ -5,87 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>أنا عمر - عالم القصص</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary: #FF5722; --secondary: #4CAF50; --bg: #F5F7FA; }
+        :root { --primary: #FF5722; --secondary: #4CAF50; --bg: #F8F9FA; }
         * { box-sizing: border-box; font-family: 'Noto Sans Arabic', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg); margin: 0; padding: 0; }
 
-        /* تصغير الهيدر وتنسيقه */
         .header-main {
-            width: 100%; height: 160px;
+            width: 100%; height: 220px;
             background: linear-gradient(135deg, #FF5722, #FF9800);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border-radius: 0 0 25px 25px; color: white; box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 40px 40px; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .header-main h1 { margin: 0; font-size: 22px; font-weight: 900; }
-        .header-main p { margin: 5px 0 0; font-size: 13px; opacity: 0.9; }
 
-        .container { padding: 12px; max-width: 480px; margin: auto; }
+        .container { padding: 20px; max-width: 600px; margin: auto; }
 
-        /* الكروت: الصور تمتد بالكامل داخل الإطار */
         .card {
-            background: white; border-radius: 18px; overflow: hidden;
-            margin-bottom: 15px; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            background: white; border-radius: 25px; overflow: hidden;
+            margin-bottom: 25px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-        .card-img-container { width: 100%; height: 170px; overflow: hidden; }
-        .card-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* تعديل لجعل الصورة كاملة في الإطار */
+        .card-img { width: 100%; height: 240px; object-fit: cover; display: block; border-bottom: 2px solid #f0f0f0; }
         
-        .card-info { padding: 12px; text-align: center; }
-        .card-info h3 { margin: 0 0 8px; font-size: 17px; color: #333; }
+        .card-info { padding: 15px; text-align: center; }
+        .card-info h3 { font-size: 20px; margin-bottom: 12px; }
         
         .btn-open {
-            background: var(--secondary); color: white; border: none; padding: 10px 0;
-            border-radius: 20px; font-size: 15px; font-weight: bold; cursor: pointer; width: 90%;
+            background: var(--secondary); color: white; border: none; padding: 12px 30px;
+            border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%;
         }
 
-        /* صفحة القراءة */
         .page { display: none; }
-        .active { display: block; animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .active { display: block; }
         
-        .nav-bar { padding: 10px 15px; background: white; display: flex; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
-        .nav-bar h3 { flex: 1; text-align: center; margin: 0; font-size: 15px; color: #444; }
+        .nav-bar { padding: 15px; background: white; display: flex; align-items: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 10; }
+        .nav-bar h3 { flex: 1; text-align: center; margin: 0; font-size: 18px; }
 
-        .story-content { padding: 18px; font-size: 17px; line-height: 1.7; text-align: justify; color: #444; background: white; }
+        .story-content { padding: 25px; font-size: 22px; line-height: 2; text-align: justify; white-space: pre-line; color: #333; }
 
-        /* التقييم بشكل أصغر */
         .rating-area {
-            background: #fff; margin: 12px; padding: 15px; border-radius: 18px;
-            text-align: center; border: 2px dashed #ddd;
+            background: white; margin: 20px; padding: 30px; border-radius: 30px;
+            text-align: center; border: 3px dashed #FF9800;
         }
-        .stars-container { margin: 8px 0; direction: ltr; }
-        .stars-container i { font-size: 24px; color: #eee; cursor: pointer; margin: 0 2px; }
+        .stars-container { margin: 20px 0; direction: ltr; }
+        .stars-container i { font-size: 35px; color: #ddd; cursor: pointer; margin: 0 5px; }
         .stars-container i.active { color: #FFD700; }
-        
-        .msg-thanks { color: var(--secondary); font-size: 13px; font-weight: bold; display: none; }
+        .msg-thanks { color: var(--secondary); font-weight: bold; display: none; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="home-page" class="page active">
     <div class="header-main">
-        <i class="fas fa-child" style="font-size: 35px; margin-bottom: 5px;"></i>
-        <h1>أنا عمر</h1>
-        <p>مغامرات ذكية وممتعة</p>
+        <i class="fas fa-star" style="font-size: 50px; margin-bottom: 10px;"></i>
+        <h1 style="margin:0;">أنا عمر</h1>
+        <p>مغامراتي الكبيرة والجميلة</p>
     </div>
     <div class="container" id="list-container"></div>
 </div>
 
 <div id="reader-page" class="page">
     <div class="nav-bar">
-        <i class="fas fa-chevron-right" onclick="goBack()" style="font-size: 18px; color: var(--primary); cursor: pointer;"></i>
+        <i class="fas fa-arrow-right" onclick="goBack()" style="font-size: 25px; color: var(--primary); cursor: pointer;"></i>
         <h3 id="view-title"></h3>
     </div>
-    <div style="width:100%; height:200px; overflow:hidden;">
-        <img id="view-img" src="" style="width:100%; height:100%; object-fit:cover;">
-    </div>
+    <img id="view-img" src="" style="width:100%; height:300px; object-fit:cover;">
     <div id="view-text" class="story-content"></div>
 
     <div class="rating-area">
-        <h3 style="font-size: 14px;">قيم القصة يا بطل</h3>
+        <h3>هل أعجبتك المغامرة؟</h3>
         <div class="stars-container">
             <i class="fas fa-star" onclick="giveRating(1)"></i>
             <i class="fas fa-star" onclick="giveRating(2)"></i>
@@ -93,8 +83,8 @@
             <i class="fas fa-star" onclick="giveRating(4)"></i>
             <i class="fas fa-star" onclick="giveRating(5)"></i>
         </div>
-        <div id="thanks" class="msg-thanks">شكراً لك يا عمر! ✨</div>
-        <button class="btn-open" style="margin-top:10px; background: var(--primary); width: 100%;" onclick="goBack()">رجوع</button>
+        <div id="thanks" class="msg-thanks">شكراً لك يا بطل! ✨</div>
+        <button class="btn-open" style="margin-top:20px; background: var(--primary);" onclick="goBack()">العودة للرئيسية</button>
     </div>
 </div>
 
@@ -102,21 +92,37 @@
     const myStories = [
         { 
             id: 1, 
-            t: 'عمر وسر الحروف', 
-            i: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=500&q=80', 
-            c: `في صباح جميل، استيقظ عمر ليجد كتابه المفضل فارغاً من الحروف! بدأ يبحث عنها في كل زاوية. وجد حرف الألف يختبئ تحت وسادته، وحرف الباء يلعب في المطبخ. ضحك عمر وجمع كل الحروف ليعيد كتابة أجمل القصص. تعلم عمر أن القراءة تجعلنا نرى العالم بشكل أجمل وأكبر.`
+            t: 'عمر وسر الحروف الضائعة', 
+            i: 'https://img.freepik.com/free-vector/cute-boy-reading-book-cartoon-vector-icon-illustration-people-education-icon-concept-isolated_138676-2107.jpg', 
+            c: `في صباح يوم مشرق وجميل، استيقظ عمر وهو متحمس جداً لقراءة كتابه الجديد. لكنه عندما فتح الصفحة الأولى، صدم بشيء غريب.. لقد اختفت الحروف تماماً من الورق!
+
+لم يستسلم عمر، بل أحضر عدسته المكبرة وبدأ يبحث في غرفته. بحث تحت السرير، وخلف الستارة، وحتى في علبة ألوانه. وفجأة، سمع صوتاً ضاحكاً يأتي من خلف المكتبة الخشبية الكبيرة.
+
+كانت الحروف تختبئ هناك وهي تهمس: "لقد أردنا أن نلعب معك يا عمر! هل يمكنك أن تجمعنا لنكون كلمات مفيدة؟". ضحك عمر وقال: "طبعاً يا أصدقائي!".
+
+بدأ عمر يمسك حرف "الألف" ويضعه بجانب حرف "اللام"، ثم حرف "السين" لتصبح كلمة (الصدق). وهكذا، قضى عمر يومه في ترتيب الحروف حتى امتلأ الكتاب بالحكايات الرائعة مرة أخرى. تعلم عمر أن الصبر والذكاء يحلان أي مشكلة.`
         },
         { 
             id: 2, 
-            t: 'رحلة عمر للفضاء', 
-            i: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=500&q=80', 
-            c: `صنع عمر صاروخاً كرتونياً رائعاً. وفجأة، وجد نفسه يطير بين النجوم! زار كوكب الألعاب حيث الروبوتات الودودة، وشاهد زحل بحلقاته الملونة. قال عمر: "سبحان الله ما أعظم هذا الكون!". عاد عمر لغرفته وهو يخطط لرحلته القادمة في خياله الواسع.`
+            t: 'عمر ورحلة الفضاء العجيبة', 
+            i: 'https://img.freepik.com/free-vector/cute-astronaut-flying-with-rocket-cartoon-vector-icon-illustration-science-technology-icon-concept_138676-2122.jpg', 
+            c: `كان عمر يحلم دائماً بأن يلمس النجوم البعيدة. في أحد الأيام، قرر أن يصنع صاروخه الخاص من صناديق الكرتون الكبيرة وألوان الرسم اللامعة التي تشبه ضوء القمر.
+
+بمجرد أن جلس عمر داخل صاروخه وأغمض عينيه، شعر باهتزاز قوي.. وفجأة! انطلق الصاروخ في الفضاء الواسع. شاهد عمر الأرض من بعيد وهي تبدو مثل كرة زرقاء صغيرة وجميلة تسبح في الظلام.
+
+وصل عمر إلى كوكب السكاكر، حيث الجبال مصنوعة من الشوكولاتة اللذيذة والأشجار من غزل البنات الوردي. ثم طار إلى كوكب الألعاب حيث الروبوتات تلعب كرة القدم بمرح.
+
+قال عمر في نفسه: "يا له من كون واسع وعظيم خلقه الله لنا!". وقبل أن يحل الليل، عاد عمر بصاروخه إلى غرفته بسلام، وهو يعلم أن الخيال هو أسرع طريق للقيام بأجمل المغامرات.`
         },
         { 
             id: 3, 
-            t: 'عمر الصادق الأمين', 
-            i: 'https://images.unsplash.com/photo-1532330393533-443990a51d10?auto=format&fit=crop&w=500&q=80', 
-            c: `بينما كان عمر يلعب في الحديقة، وجد محفظة مفقودة. لم يتردد عمر لحظة، بل ذهب مسرعاً لوالده ليساعده في العثور على صاحبها. عندما عادت المحفظة لصاحبها، شكر عمر كثيراً ووصفه بالبطل. شعر عمر بسعادة غامرة لأن الصدق هو سر القوة الحقيقية.`
+            t: 'عمر وبطل الأمانة', 
+            i: 'https://img.freepik.com/free-vector/boy-washing-hands-cartoon-vector-illustration-hygiene-concept_138676-2041.jpg', 
+            c: `بينما كان عمر يلعب في الحديقة العامة مع أصدقائه، وجد محفظة صغيرة زرقاء ملقاة بجانب المقعد الخشبي. فتحها عمر ووجد بداخلها مبلغاً كبيراً من المال وصورة لرجل مسن يبتسم.
+
+تذكر عمر فوراً ما تعلمه عن الأمانة والصدق في المدرسة. ذهب عمر مسرعاً إلى والده وأخبره بالقصة. بدأ عمر ووالده بالبحث عن صاحب المحفظة في كل مكان، حتى وجدا رجلاً مسناً يبدو عليه الحزن الشديد وهو يبحث عن شيء ضائع.
+
+اقترب منه عمر وقال بابتسامة: "هل هذه محفظتك يا سيدي؟". فرح الرجل جداً وشكر عمر كثيراً، وقال له: "أنت بطل حقيقي يا بني، الأمانة هي أغلى من كل كنوز العالم". شعر عمر بفرحة كبيرة في قلبه، وتعلم أن فعل الصواب دائماً ما يجعلنا فخورين بأنفسنا.`
         }
     ];
 
@@ -126,12 +132,10 @@
         myStories.forEach(s => {
             container.innerHTML += `
                 <div class="card">
-                    <div class="card-img-container">
-                        <img src="${s.i}" class="card-img" alt="story image">
-                    </div>
+                    <img src="${s.i}" class="card-img" alt="story image">
                     <div class="card-info">
                         <h3>${s.t}</h3>
-                        <button class="btn-open" onclick="readNow(${s.id})">فتح القصة</button>
+                        <button class="btn-open" onclick="readNow(${s.id})">ابدأ القراءة</button>
                     </div>
                 </div>`;
         });
