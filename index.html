@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>ana-omar | قصص الأطفال</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body{margin:0;font-family:Tahoma;background:#fff7e6;direction:rtl}
 
@@ -15,12 +14,10 @@ background:#ff9800;color:#fff;
 display:flex;align-items:center;justify-content:center;
 font-size:26px;font-weight:bold;
 z-index:999;
-animation:fadeOut 2s ease 3s forwards;
 }
-@keyframes fadeOut{to{opacity:0;visibility:hidden}}
 
 /* Login */
-.center{max-width:360px;margin:80px auto;background:#fff;padding:15px;border-radius:8px}
+.center{max-width:360px;margin:80px auto;background:#fff;padding:15px;border-radius:8px;display:none;}
 input,textarea,select{width:100%;margin:6px 0;padding:7px}
 
 /* App */
@@ -37,14 +34,13 @@ section.active{display:block}
 footer{text-align:center;font-size:13px;color:#666;margin:20px 0}
 </style>
 </head>
-
 <body>
 
 <!-- Splash Screen -->
 <div id="splash">✨ مرحبًا بكم – أنا عمر ✨</div>
 
 <!-- Login -->
-<div id="login" class="center" style="display:none">
+<div id="login" class="center">
 <h3>إنشاء حساب</h3>
 <input id="name" placeholder="الاسم">
 <input id="email" type="email" placeholder="البريد الإلكتروني">
@@ -55,7 +51,6 @@ footer{text-align:center;font-size:13px;color:#666;margin:20px 0}
 
 <!-- App -->
 <div id="app" style="display:none">
-
 <header>
 ana-omar | مرحبًا <span id="user"></span>
 </header>
@@ -72,5 +67,49 @@ ana-omar | مرحبًا <span id="user"></span>
 <section id="moral"></section>
 
 <section id="admin">
-<h3>
+<h3>إضافة قصة</h3>
+<input id="title" placeholder="عنوان القصة">
+<textarea id="content" placeholder="وصف مختصر"></textarea>
+<label>صورة القصة:</label>
+<input type="file" id="imageFile" accept="image/*">
+<label>ملف القصة PDF:</label>
+<input type="file" id="pdf" accept="application/pdf">
+<input id="price" type="number" placeholder="السعر بالجنيه">
+<select id="type">
+<option value="edu">تعليمية</option>
+<option value="adv">مغامرات</option>
+<option value="moral">هادفة</option>
+</select>
+<button onclick="addStory()">حفظ القصة</button>
+</section>
 
+<footer>
+جميع الحقوق محفوظة للمؤلف محمد فتحي ©2026
+</footer>
+
+<script>
+const splash=document.getElementById("splash");
+const login=document.getElementById("login");
+const app=document.getElementById("app");
+const user=document.getElementById("user");
+
+/* بعد 3 ثواني من Splash */
+setTimeout(()=>{
+splash.style.display="none";
+let u=JSON.parse(localStorage.getItem("user"));
+if(u){
+app.style.display="block";
+user.innerText=u.name;
+}else{
+login.style.display="block";
+}
+},3000);
+
+/* تسجيل المستخدم */
+function register(){
+let n=name.value.trim();
+let e=email.value.trim();
+let p=pass.value.trim();
+let p2=pass2.value.trim();
+
+if(n===""||e===""||p
